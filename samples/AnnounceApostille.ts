@@ -6,7 +6,7 @@ const text = 'aaaaaaaaa';
 const filename = 'sample.txt';
 const ownerPrivateKey = 'aaaaaaaaaaeeeeeeeeeebbbbbbbbbb5555555555dddddddddd1111111111aaee';
 const sha256 = new SHA256();
-const url = 'http://localhost:3000';
+const url = 'http://13.114.200.132:3000';
 
 const apostilleService = new ApostilleService(text, filename,
                                               sha256, url,

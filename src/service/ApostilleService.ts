@@ -98,9 +98,9 @@ export class ApostilleService {
   }
 
   private signedFileHash() {
-    return this.hashFunction.signedHashing(this.data,
-                                           this.ownerAccount.privateKey,
-                                           this.networkType);
+    return this.hashFunction.apostilleTransactionMessage(this.data,
+                                                         this.ownerAccount.privateKey,
+                                                         this.networkType);
   }
 
   private isAnnounceable() {
