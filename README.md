@@ -1,7 +1,11 @@
 # Apostille v2 Sample
 
-This is a sample project for Apostille Improvement Protocol.
+## NOTE
+
+This is an experimental library.
+Recommended to use [luxtagofficial/Apostille-library](https://github.com/luxtagofficial/Apostille-library)
 
 ## refs
 
 - [Apostille Improvement Protocol](https://github.com/nemtech/NIP/issues/11)
+- [luxtagofficial/Apostille-library](https://github.com/luxtagofficial/Apostille-library)
