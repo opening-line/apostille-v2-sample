@@ -1,4 +1,4 @@
-import { SHA256, MD5, SHA1, KECCAK256, KECCAK512, SHA3_256, SHA3_512 } from '../src/hash/hash';
+import { SHA256, MD5, SHA1, KECCAK256, KECCAK512, SHA3_256, SHA3_512 } from '../../src/hash/hash';
 import { NetworkType } from 'nem2-sdk';
 
 describe('Generate correct hash using MIJIN_TEST network type', () => {
