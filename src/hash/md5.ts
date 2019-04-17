@@ -1,15 +1,15 @@
 import { HashFunction } from './HashFunction';
-import { createHash } from 'crypto';
 import { HashingType } from './HashingType';
+import { createHash } from 'crypto';
 
-export class SHA256 extends HashFunction {
+export class MD5 extends HashFunction {
 
   constructor() {
-    super(HashingType.sha256);
+    super(HashingType.md5);
   }
 
   public hashing(data: string) {
-    const hash = createHash('sha256');
+    const hash = createHash('md5');
     hash.update(data);
     return hash.digest('hex');
   }
