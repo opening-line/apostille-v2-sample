@@ -12,6 +12,7 @@ export class ApostilleService {
   private apostilleAccount: ApostilleAccount;
 
   private coreTransaction?: InnerTransaction;
+  private metadataTransaction?: InnerTransaction;
 
   public constructor(private data: string,
                      filename: string,
@@ -32,6 +33,18 @@ export class ApostilleService {
       this.networkType,
     );
     this.coreTransaction = transaction.toAggregate(this.ownerAccount.publicAccount);
+  }
+
+  public createMetadataTransaction(metadata: any) {
+    const message = JSON.stringify(metadata);
+    const transaction = TransferTransaction.create(
+      Deadline.create(),
+      this.apostilleAccount.address,
+      [],
+      PlainMessage.create(message),
+      this.networkType,
+    );
+    this.metadataTransaction = transaction.toAggregate(this.apostilleAccount.publicAccount);
   }
 
   public announce() {
@@ -76,11 +89,13 @@ export class ApostilleService {
 
   private signTransaction() {
     const aggregateTransaction = this.createAggregateTransaction();
-    /*
-    return this.ownerAccount.signTransactionWithCosignatories(
-      aggregateTransaction,
-      [this.apostilleAccount.account],
-    );*/
+    if (this.metadataTransaction) {
+      return this.ownerAccount.signTransactionWithCosignatories(
+        aggregateTransaction,
+        [this.apostilleAccount.account],
+      );
+    }
+
     return this.ownerAccount.sign(aggregateTransaction);
   }
 
@@ -94,7 +109,12 @@ export class ApostilleService {
   }
 
   private innerTransactions() {
-    return [this.coreTransaction!];
+    const innerTransactions: InnerTransaction[] = [];
+    innerTransactions.push(this.coreTransaction!);
+    if (this.metadataTransaction) {
+      innerTransactions.push(this.metadataTransaction!);
+    }
+    return innerTransactions;
   }
 
   private signedFileHash() {
