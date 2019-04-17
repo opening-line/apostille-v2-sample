@@ -15,10 +15,10 @@ const apostilleService = new ApostilleService(text, filename,
 apostilleService.createCoreTransaction();
 apostilleService.announce().then(
   (x) => {
-    console.log(x.txHash);
-    console.log(x.fileHash);
-    console.log(x.apostilleAccount.address.plain());
-    console.log(x.ownerPublicAccount.address.plain());
+    console.log(`txhash: ${x.txHash}`);
+    console.log(`filehash: ${x.fileHash}`);
+    console.log(`apostille account address: ${x.apostilleAccount.address.plain()}`);
+    console.log(`owner account address : ${x.ownerPublicAccount.address.plain()}`);
   },
   err => console.error(err),
 );
