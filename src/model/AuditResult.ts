@@ -1,4 +1,4 @@
-import { PublicAccount, Address } from "nem2-sdk";
+import { PublicAccount, Address } from 'nem2-sdk';
 
 export class AuditResult {
   constructor(public readonly isSuccess: boolean,
@@ -7,5 +7,6 @@ export class AuditResult {
               public readonly ownerPublicAccount?: PublicAccount,
               public readonly apostilleAddress?: Address,
               public readonly timestamp?: number,
+              public readonly metadata?: any,
     ) {}
 }

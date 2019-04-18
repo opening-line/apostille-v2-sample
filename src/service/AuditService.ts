@@ -8,6 +8,7 @@ export class AuditService {
   private ownerPublicAccount?: PublicAccount;
 
   private coreTransaction?: TransferTransaction;
+  private metadata?: any;
 
   constructor(private readonly data: string,
               private readonly txHash: string,
@@ -27,9 +28,8 @@ export class AuditService {
                                              this.ownerPublicAccount!.publicKey, this.networkType);
       if (auditResult) {
         return this.auditResult();
-      } else {
-        return new AuditResult(false);
       }
+      return new AuditResult(false);
     } catch (err) {
       throw err;
     }
@@ -41,7 +41,7 @@ export class AuditService {
     const timestamp = await this.getTransactionTimestamp(this.coreTransaction!);
     return new AuditResult(true, this.txHash,
                            fileHash, this.ownerPublicAccount,
-                           apostilleAddress, timestamp);
+                           apostilleAddress, timestamp, this.metadata);
   }
 
   private async getTransaction() {
@@ -56,17 +56,37 @@ export class AuditService {
 
   private parseInnerTransaction(transaction: AggregateTransaction) {
     transaction.innerTransactions.forEach((innerTransaction) => {
-      if (innerTransaction instanceof TransferTransaction) {
-        if (innerTransaction.message.payload.startsWith('fe4e5459')) {
-          this.coreTransaction = innerTransaction;
-          this.ownerPublicAccount = innerTransaction.signer;
-        }
+    
+      if (this.isCoreTransaction(innerTransaction)) {
+        this.coreTransaction = innerTransaction as TransferTransaction;
+        this.ownerPublicAccount = innerTransaction.signer;
+      }
+      if (this.isMetadataTransaction(innerTransaction)) {
+        const tx = innerTransaction as TransferTransaction;
+        this.metadata = JSON.parse(tx.message.payload);
       }
     });
 
     if (!this.coreTransaction) {
       throw Error('core transaction not founded');
     }
+  }
+
+  private isCoreTransaction(transaction: Transaction) {
+    if (transaction instanceof TransferTransaction &&
+      transaction.message.payload.startsWith('fe4e5459')) {
+      return true;
+    }
+    return false;
+  }
+
+  private isMetadataTransaction(transaction: Transaction) {
+    if (transaction instanceof TransferTransaction &&
+      (transaction.recipient as Address).equals(transaction.signer!.address)) {
+      return true;
+    }
+
+    return false;
   }
 
   private getCoreTransactionPayload() {
