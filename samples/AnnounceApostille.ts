@@ -1,15 +1,18 @@
 import { ApostilleService } from '../src/service/ApostilleService';
 import { SHA256 } from '../src/hash/hash';
 import { NetworkType } from 'nem2-sdk';
+import * as fs from 'fs';
 
-const text = 'aaaaaaaaa';
-const filename = 'sample.txt';
+console.log(__dirname);
+const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
+const fileData = file.toString('hex');
+const filename = '90681.png';
 const ownerPrivateKey = 'aaaaaaaaaaeeeeeeeeeebbbbbbbbbb5555555555dddddddddd1111111111aaee';
 const sha256 = new SHA256();
-const url = 'http://18.217.110.63:3000';
-const metadata = { a: 'hoge', b: ['b1', 'b2'], c: { c1: 'fuga' }, d: null };
+const url = 'http://13.114.200.132:3000';
+const metadata = { filename: '90681.jpeg', description: "daoka icon" };
 
-const apostilleService = new ApostilleService(text, filename,
+const apostilleService = new ApostilleService(fileData, filename,
                                               sha256, url,
                                               NetworkType.MIJIN_TEST, ownerPrivateKey);
 
