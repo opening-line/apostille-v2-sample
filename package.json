@@ -1,11 +1,12 @@
 {
-  "name": "apostille-sample",
-  "version": "1.0.0",
+  "name": "apostille-v2-sample",
+  "version": "0.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "test": "jest"
+    "build": "rm -rf dist/ && tsc",
+    "test": "jest",
+    "prepublish": "rm -rf dist/ && $(npm bin)/tsc"
   },
   "author": "",
   "license": "ISC",

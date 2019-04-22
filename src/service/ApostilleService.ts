@@ -53,7 +53,8 @@ export class ApostilleService {
     }
 
     const transactionHttp = new TransactionHttp(this.url);
-    const listener = new Listener(this.url);
+    const wsEndpoint = this.url.replace('http', 'ws');
+    const listener = new Listener(wsEndpoint);
     const signedTransaction = this.signTransaction();
     return new Promise<AnnounceResult>((resolve, reject) => {
       listener.open().then(() => {
