@@ -48,7 +48,7 @@ export class ApostilleService {
     this.metadataTransaction = transaction.toAggregate(this.apostilleAccount.publicAccount);
   }
 
-  public announce(webSocket?) {
+  public announce(webSocket?: any) {
     if (!this.isAnnounceable()) {
       throw Error('can not announceable');
     }
