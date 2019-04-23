@@ -5,6 +5,7 @@ import { NetworkType, Account, TransferTransaction,
 import { ApostilleAccount } from '../model/ApostilleAccount';
 import { filter } from 'rxjs/operators';
 import { AnnounceResult } from '../model/AnnounceResult';
+import * as NodeWebSocket from 'ws';
 
 export class ApostilleService {
 
@@ -47,13 +48,18 @@ export class ApostilleService {
     this.metadataTransaction = transaction.toAggregate(this.apostilleAccount.publicAccount);
   }
 
-  public announce() {
+  public announce(webSocket?: any) {
     if (!this.isAnnounceable()) {
       throw Error('can not announceable');
     }
 
     const transactionHttp = new TransactionHttp(this.url);
-    const listener = new Listener(this.url);
+    const wsEndpoint = this.url.replace('http', 'ws');
+    let ws = webSocket;
+    if (!ws) {
+      ws = NodeWebSocket.default;
+    }
+    const listener = new Listener(wsEndpoint, ws);
     const signedTransaction = this.signTransaction();
     return new Promise<AnnounceResult>((resolve, reject) => {
       listener.open().then(() => {
