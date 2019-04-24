@@ -1,7 +1,7 @@
 import { HashFunction } from '../hash/HashFunction';
 import { NetworkType, Account, TransferTransaction,
     Deadline, PlainMessage, InnerTransaction, AggregateTransaction,
-    Listener, TransactionHttp, Transaction} from 'nem2-sdk';
+    Listener, TransactionHttp, Transaction, ModifyMultisigAccountTransaction, MultisigCosignatoryModification, MultisigCosignatoryModificationType} from 'nem2-sdk';
 import { ApostilleAccount } from '../model/ApostilleAccount';
 import { filter } from 'rxjs/operators';
 import { AnnounceResult } from '../model/AnnounceResult';
@@ -14,6 +14,7 @@ export class ApostilleService {
 
   private coreTransaction?: InnerTransaction;
   private metadataTransaction?: InnerTransaction;
+  private assignOwnershipTransaction?: InnerTransaction;
 
   public constructor(private data: string,
                      filename: string,
@@ -34,6 +35,22 @@ export class ApostilleService {
       this.networkType,
     );
     this.coreTransaction = transaction.toAggregate(this.ownerAccount.publicAccount);
+  }
+
+  public createAssignOwnershipTransaction() {
+    const transaction = ModifyMultisigAccountTransaction.create(
+      Deadline.create(),
+      1,
+      1,
+      [
+        new MultisigCosignatoryModification(
+          MultisigCosignatoryModificationType.Add,
+          this.ownerAccount.publicAccount,
+        ),
+      ],
+      this.networkType,
+    );
+    this.assignOwnershipTransaction = transaction.toAggregate(this.apostilleAccount.publicAccount);
   }
 
   public createMetadataTransaction(metadata: any) {
@@ -95,7 +112,7 @@ export class ApostilleService {
 
   private signTransaction() {
     const aggregateTransaction = this.createAggregateTransaction();
-    if (this.metadataTransaction) {
+    if (this.needApostilleAccountsSign()) {
       return this.ownerAccount.signTransactionWithCosignatories(
         aggregateTransaction,
         [this.apostilleAccount.account],
@@ -103,6 +120,13 @@ export class ApostilleService {
     }
 
     return this.ownerAccount.sign(aggregateTransaction);
+  }
+
+  private needApostilleAccountsSign() {
+    if (this.metadataTransaction || this.assignOwnershipTransaction) {
+      return true;
+    }
+    return false;
   }
 
   private createAggregateTransaction() {
@@ -117,6 +141,9 @@ export class ApostilleService {
   private innerTransactions() {
     const innerTransactions: InnerTransaction[] = [];
     innerTransactions.push(this.coreTransaction!);
+    if (this.assignOwnershipTransaction) {
+      innerTransactions.push(this.assignOwnershipTransaction!);
+    }
     if (this.metadataTransaction) {
       innerTransactions.push(this.metadataTransaction!);
     }

@@ -9,7 +9,8 @@ const fileData = file.toString('hex');
 const filename = '90681.png';
 const ownerPrivateKey = 'aaaaaaaaaaeeeeeeeeeebbbbbbbbbb5555555555dddddddddd1111111111aaee';
 const sha256 = new SHA256();
-const url = 'https://jp5.nemesis.land:3001';
+// const url = 'https://jp5.nemesis.land:3001';
+const url = 'http://18.217.110.63:3000';
 const metadata = { filename: '90681.jpeg', description: "daoka icon" };
 
 const apostilleService = new ApostilleService(fileData, filename,
@@ -17,6 +18,7 @@ const apostilleService = new ApostilleService(fileData, filename,
                                               NetworkType.MIJIN_TEST, ownerPrivateKey);
 
 apostilleService.createCoreTransaction();
+apostilleService.createAssignOwnershipTransaction();
 apostilleService.createMetadataTransaction(metadata);
 apostilleService.announce().then(
   (x) => {

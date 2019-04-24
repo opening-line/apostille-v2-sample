@@ -2,10 +2,11 @@ import { AuditService } from '../src/service/AuditService';
 import { NetworkType } from 'nem2-sdk';
 import * as fs from 'fs';
 
-const url = 'https://jp5.nemesis.land:3001';
+const url = 'http://18.217.110.63:3000';
 const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
+// const file = fs.readFileSync(`${__dirname}/file/dummy.txt`);
 const fileData = file.toString('hex');
-const txHash = '2A48C0E6E5AA568A4AAEBCFFFE1584E11BC3E427549BA63FC7EE0849A30C51B4';
+const txHash = '2D7D927158F9EB6AC99EE930975199B0E82B13966376CD4D039D3F2800AAD399';
 
 run();
 
