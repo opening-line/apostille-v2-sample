@@ -1,11 +1,14 @@
 import { HashFunction } from '../hash/HashFunction';
 import { NetworkType, Account, TransferTransaction,
     Deadline, PlainMessage, InnerTransaction, AggregateTransaction,
-    Listener, TransactionHttp, Transaction, ModifyMultisigAccountTransaction, MultisigCosignatoryModification, MultisigCosignatoryModificationType} from 'nem2-sdk';
+    Listener, TransactionHttp, Transaction,
+    ModifyMultisigAccountTransaction, MultisigCosignatoryModification,
+    MultisigCosignatoryModificationType} from 'nem2-sdk';
 import { ApostilleAccount } from '../model/ApostilleAccount';
 import { filter } from 'rxjs/operators';
 import { AnnounceResult } from '../model/AnnounceResult';
 import * as NodeWebSocket from 'ws';
+import { Sinks } from '../model/Sink';
 
 export class ApostilleService {
 
@@ -13,6 +16,7 @@ export class ApostilleService {
   private apostilleAccount: ApostilleAccount;
 
   private coreTransaction?: InnerTransaction;
+  private announcePublicSinkTransaction?: InnerTransaction;
   private metadataTransaction?: InnerTransaction;
   private assignOwnershipTransaction?: InnerTransaction;
 
@@ -35,6 +39,19 @@ export class ApostilleService {
       this.networkType,
     );
     this.coreTransaction = transaction.toAggregate(this.ownerAccount.publicAccount);
+  }
+
+  public createAnnouncePublicSinkTransaction() {
+    const sinkAddress = Sinks.getAddress(this.networkType);
+    const transaction = TransferTransaction.create(
+      Deadline.create(),
+      sinkAddress,
+      [],
+      PlainMessage.create(this.signedFileHash()),
+      this.networkType,
+    );
+    this.announcePublicSinkTransaction =
+      transaction.toAggregate(this.apostilleAccount.publicAccount);
   }
 
   public createAssignOwnershipTransaction() {
@@ -123,7 +140,8 @@ export class ApostilleService {
   }
 
   private needApostilleAccountsSign() {
-    if (this.metadataTransaction || this.assignOwnershipTransaction) {
+    if (this.metadataTransaction || this.assignOwnershipTransaction
+      || this.announcePublicSinkTransaction) {
       return true;
     }
     return false;
@@ -141,6 +159,9 @@ export class ApostilleService {
   private innerTransactions() {
     const innerTransactions: InnerTransaction[] = [];
     innerTransactions.push(this.coreTransaction!);
+    if (this.announcePublicSinkTransaction) {
+      innerTransactions.push(this.announcePublicSinkTransaction!);
+    }
     if (this.assignOwnershipTransaction) {
       innerTransactions.push(this.assignOwnershipTransaction!);
     }
