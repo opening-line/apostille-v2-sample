@@ -2,6 +2,7 @@ import { PublicAccount, NetworkType, TransactionHttp, Transaction,
    AggregateTransaction, TransferTransaction, BlockchainHttp, Address } from 'nem2-sdk';
 import { AuditPayload } from '../utils/utils';
 import { AuditResult } from '../model/AuditResult';
+import { Sinks } from '../model/Sink';
 
 export class AuditService {
 
@@ -56,7 +57,6 @@ export class AuditService {
 
   private parseInnerTransaction(transaction: AggregateTransaction) {
     transaction.innerTransactions.forEach((innerTransaction) => {
-    
       if (this.isCoreTransaction(innerTransaction)) {
         this.coreTransaction = innerTransaction as TransferTransaction;
         this.ownerPublicAccount = innerTransaction.signer;
@@ -74,7 +74,8 @@ export class AuditService {
 
   private isCoreTransaction(transaction: Transaction) {
     if (transaction instanceof TransferTransaction &&
-      transaction.message.payload.startsWith('fe4e5459')) {
+      transaction.message.payload.startsWith('fe4e5459') &&
+      !transaction.recipient.equals(Sinks.getAddress(this.networkType))) {
       return true;
     }
     return false;
