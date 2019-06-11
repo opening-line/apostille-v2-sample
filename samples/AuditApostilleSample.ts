@@ -2,11 +2,12 @@ import { AuditService } from '../src/service/AuditService';
 import { NetworkType } from 'nem2-sdk';
 import * as fs from 'fs';
 
-const url = 'http://18.217.110.63:3000';
+// const url = 'http://18.217.110.63:3000';
+const url = 'http://ec2-18-223-111-125.us-east-2.compute.amazonaws.com:3000';
 const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
 // const file = fs.readFileSync(`${__dirname}/file/dummy.txt`);
 const fileData = file.toString('hex');
-const txHash = 'FD586B5F6E8B57A6A6E4058C91A38C829072A39FCDFB3678E7C5A7EBFDFAB998';
+const txHash = 'E90D9C6628B0687B3F880622F734E8E87451FBEC693AC6AA93AAA61E9686B5B8';
 
 run();
 

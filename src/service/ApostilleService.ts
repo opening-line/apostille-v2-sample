@@ -25,7 +25,8 @@ export class ApostilleService {
                      private hashFunction: HashFunction,
                      private url: string,
                      private networkType: NetworkType,
-                     ownerPrivateKey: string) {
+                     ownerPrivateKey: string,
+                     private networkGenerationHash) {
     this.ownerAccount = Account.createFromPrivateKey(ownerPrivateKey, networkType);
     this.apostilleAccount = ApostilleAccount.create(filename, this.ownerAccount);
   }
@@ -133,10 +134,11 @@ export class ApostilleService {
       return this.ownerAccount.signTransactionWithCosignatories(
         aggregateTransaction,
         [this.apostilleAccount.account],
+        this.networkGenerationHash,
       );
     }
 
-    return this.ownerAccount.sign(aggregateTransaction);
+    return this.ownerAccount.sign(aggregateTransaction, this.networkGenerationHash);
   }
 
   private needApostilleAccountsSign() {

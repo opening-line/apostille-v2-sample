@@ -10,12 +10,15 @@ const filename = '90681.png';
 const ownerPrivateKey = Account.generateNewAccount(NetworkType.MIJIN_TEST).privateKey;
 const sha256 = new SHA256();
 // const url = 'https://jp5.nemesis.land:3001';
-const url = 'http://18.217.110.63:3000';
-const metadata = { filename: '90681.jpeg', description: "daoka icon" };
+// const url = 'http://18.217.110.63:3000';
+const url = 'http://ec2-18-223-111-125.us-east-2.compute.amazonaws.com:3000';
+const networkGenerationHash = 'FFAFEBE5B8C13D0F906BCF376B98CA94795459B83CD837A6FF38B71B5C23BF7C';
+const metadata = { filename: '90681.jpeg', description: 'daoka icon' };
 
 const apostilleService = new ApostilleService(fileData, filename,
                                               sha256, url,
-                                              NetworkType.MIJIN_TEST, ownerPrivateKey);
+                                              NetworkType.MIJIN_TEST, ownerPrivateKey,
+                                              networkGenerationHash);
 
 apostilleService.createCoreTransaction();
 apostilleService.createAnnouncePublicSinkTransaction();
