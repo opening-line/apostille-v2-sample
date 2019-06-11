@@ -1,5 +1,5 @@
 import { PublicAccount, NetworkType, TransactionHttp, Transaction,
-   AggregateTransaction, TransferTransaction, BlockchainHttp, Address } from 'nem2-sdk';
+   AggregateTransaction, TransferTransaction, Address, BlockHttp } from 'nem2-sdk';
 import { AuditPayload } from '../utils/utils';
 import { AuditResult } from '../model/AuditResult';
 import { Sinks } from '../model/Sink';
@@ -107,7 +107,7 @@ export class AuditService {
 
   private async getTransactionTimestamp(transaction: Transaction) {
     const blockHeight = transaction.transactionInfo!.height;
-    const blockchainHttp = new BlockchainHttp(this.url);
+    const blockchainHttp = new BlockHttp(this.url);
     const blockInfo = await blockchainHttp.getBlockByHeight(blockHeight.compact()).toPromise();
     const timestamp = blockInfo.timestamp.compact();
     return timestamp + new Date(Date.UTC(2016, 3, 1, 0, 0, 0, 0)).getTime();
