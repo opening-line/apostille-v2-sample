@@ -11,8 +11,8 @@ const ownerPrivateKey = Account.generateNewAccount(NetworkType.MIJIN_TEST).priva
 const sha256 = new SHA256();
 // const url = 'https://jp5.nemesis.land:3001';
 // const url = 'http://18.217.110.63:3000';
-const url = 'http://ec2-18-223-111-125.us-east-2.compute.amazonaws.com:3000';
-const networkGenerationHash = 'FFAFEBE5B8C13D0F906BCF376B98CA94795459B83CD837A6FF38B71B5C23BF7C';
+const url = 'http://ec2-18-222-193-177.us-east-2.compute.amazonaws.com:3000';
+const networkGenerationHash = '453052FDC4EB23BF0D7280C103F7797133A633B68A81986165B76FCE248AB235';
 const metadata = { filename: '90681.jpeg', description: 'daoka icon' };
 
 const apostilleService = new ApostilleService(fileData, filename,
