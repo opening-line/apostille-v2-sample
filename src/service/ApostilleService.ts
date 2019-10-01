@@ -2,8 +2,9 @@ import { HashFunction } from '../hash/HashFunction';
 import { NetworkType, Account, TransferTransaction,
     Deadline, PlainMessage, InnerTransaction, AggregateTransaction,
     Listener, TransactionHttp, Transaction,
-    ModifyMultisigAccountTransaction, MultisigCosignatoryModification,
-    MultisigCosignatoryModificationType} from 'nem2-sdk';
+    MultisigCosignatoryModification,
+    MultisigAccountModificationTransaction,
+    CosignatoryModificationAction} from 'nem2-sdk';
 import { ApostilleAccount } from '../model/ApostilleAccount';
 import { filter } from 'rxjs/operators';
 import { AnnounceResult } from '../model/AnnounceResult';
@@ -56,13 +57,13 @@ export class ApostilleService {
   }
 
   public createAssignOwnershipTransaction() {
-    const transaction = ModifyMultisigAccountTransaction.create(
+    const transaction = MultisigAccountModificationTransaction.create(
       Deadline.create(),
       1,
       1,
       [
         new MultisigCosignatoryModification(
-          MultisigCosignatoryModificationType.Add,
+          CosignatoryModificationAction.Add,
           this.ownerAccount.publicAccount,
         ),
       ],

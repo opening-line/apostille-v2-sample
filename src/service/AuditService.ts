@@ -38,7 +38,7 @@ export class AuditService {
 
   private async auditResult() {
     const fileHash = this.coreTransaction!.message.payload;
-    const apostilleAddress = this.coreTransaction!.recipient as Address;
+    const apostilleAddress = this.coreTransaction!.recipientAddress as Address;
     const timestamp = await this.getTransactionTimestamp(this.coreTransaction!);
     return new AuditResult(true, this.txHash,
                            fileHash, this.ownerPublicAccount,
@@ -75,7 +75,7 @@ export class AuditService {
   private isCoreTransaction(transaction: Transaction) {
     if (transaction instanceof TransferTransaction &&
       transaction.message.payload.startsWith('fe4e5459') &&
-      !transaction.recipient.equals(Sinks.getAddress(this.networkType))) {
+      !transaction.recipientAddress.equals(Sinks.getAddress(this.networkType))) {
       return true;
     }
     return false;
@@ -83,7 +83,7 @@ export class AuditService {
 
   private isMetadataTransaction(transaction: Transaction) {
     if (transaction instanceof TransferTransaction &&
-      (transaction.recipient as Address).equals(transaction.signer!.address)) {
+      (transaction.recipientAddress as Address).equals(transaction.signer!.address)) {
       return true;
     }
 
