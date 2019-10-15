@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "js-sha3": "^0.8.0",
-    "nem2-sdk": "^0.14.0",
+    "nem2-sdk": "^0.14.1",
     "rxjs": "^6.4.0",
     "ws": "^6.2.1"
   },
