@@ -43,7 +43,7 @@ export class ApostilleService {
     this.coreTransaction = transaction.toAggregate(this.ownerAccount.publicAccount);
   }
 
-  public createAnnouncePublicSinkTransaction() {
+  public addAnnouncePublicSinkTransaction() {
     const sinkAddress = Sinks.getAddress(this.networkType);
     const transaction = TransferTransaction.create(
       Deadline.create(),
@@ -56,7 +56,14 @@ export class ApostilleService {
       transaction.toAggregate(this.apostilleAccount.publicAccount);
   }
 
-  public createAssignOwnershipTransaction() {
+  /**
+   * @deprecated
+   */
+  public createAnnouncePublicSinkTransaction() {
+    this.addAnnouncePublicSinkTransaction();
+  }
+
+  public addAssignOwnershipTransaction() {
     const transaction = MultisigAccountModificationTransaction.create(
       Deadline.create(),
       1,
@@ -72,7 +79,14 @@ export class ApostilleService {
     this.assignOwnershipTransaction = transaction.toAggregate(this.apostilleAccount.publicAccount);
   }
 
-  public createMetadataTransaction(metadata: any) {
+  /**
+   * @deprecated
+   */
+  public createAssignOwnershipTransaction() {
+    this.addAssignOwnershipTransaction();
+  }
+
+  public addMetadataTransaction(metadata: any) {
     const message = JSON.stringify(metadata);
     const transaction = TransferTransaction.create(
       Deadline.create(),
@@ -82,6 +96,14 @@ export class ApostilleService {
       this.networkType,
     );
     this.metadataTransaction = transaction.toAggregate(this.apostilleAccount.publicAccount);
+  }
+
+  /**
+   * @deprecated
+   * @param metadata
+   */
+  public createMetadataTransaction(metadata: any) {
+    this.addMetadataTransaction(metadata);
   }
 
   public announce(webSocket?: any) {

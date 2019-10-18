@@ -19,9 +19,9 @@ const apostilleService = new ApostilleService(fileData, filename,
                                               networkGenerationHash);
 
 apostilleService.createCoreTransaction();
-apostilleService.createAnnouncePublicSinkTransaction();
-apostilleService.createAssignOwnershipTransaction();
-apostilleService.createMetadataTransaction(metadata);
+apostilleService.addAnnouncePublicSinkTransaction();
+apostilleService.addAssignOwnershipTransaction();
+apostilleService.addMetadataTransaction(metadata);
 apostilleService.announce().then(
   (x) => {
     console.log(`txhash: ${x.txHash}`);
