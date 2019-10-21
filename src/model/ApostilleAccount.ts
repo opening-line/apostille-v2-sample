@@ -1,4 +1,4 @@
-import { Account, PublicAccount, Address } from 'nem2-sdk';
+import { Account, PublicAccount, Address, AccountHttp } from 'nem2-sdk';
 import { createHash } from 'crypto';
 
 const fixPrivateKey = (privateKey) => {
@@ -6,6 +6,13 @@ const fixPrivateKey = (privateKey) => {
   return (`0000000000000000000000000000000000000000000000000000000000000000${privateKey.replace(/^00/, '')}`)
     .slice(-64);
 };
+
+export enum SignType {
+  ApostilleAccountOnly,
+  SingleCosignatoryOnly,
+  NeedOtherCosignatory,
+  CannotSign,
+}
 
 export class ApostilleAccount {
   public static create(filename: string, ownerAccount: Account) {
@@ -19,11 +26,44 @@ export class ApostilleAccount {
     return new ApostilleAccount(apostilleAccount);
   }
 
+  public static createWithExistAccount(existAccount: Account | PublicAccount) {
+    return new ApostilleAccount(existAccount);
+  }
+
+  public readonly account?: Account;
   public readonly publicAccount: PublicAccount;
   public readonly address: Address;
 
-  public constructor(public readonly account: Account) {
-    this.publicAccount = account.publicAccount;
-    this.address = account.address;
+  public constructor(account: Account | PublicAccount) {
+    if (account instanceof Account) {
+      this.account = account;
+      this.publicAccount = account.publicAccount;
+      this.address = account.address;
+    } else {
+      this.publicAccount = account;
+      this.address = account.address;
+    }
+  }
+
+  public async needSignType(networkUrl: string, cosignatoryPublicKey?: string) {
+    try {
+      const accountHttp = new AccountHttp(networkUrl);
+      const multsigInfo = await accountHttp.getMultisigAccountInfo(this.address).toPromise();
+      if (multsigInfo.cosignatories.length > 0) {
+        const check = multsigInfo.cosignatories.some(
+          publicAccount => publicAccount.publicKey === cosignatoryPublicKey,
+        );
+        if (!check) {
+          return SignType.CannotSign;
+        }
+        if (multsigInfo.minApproval === 1) {
+          return SignType.SingleCosignatoryOnly;
+        }
+        return SignType.NeedOtherCosignatory;
+      }
+      return SignType.ApostilleAccountOnly;
+    } catch (err) {
+      return SignType.ApostilleAccountOnly;
+    }
   }
 }
