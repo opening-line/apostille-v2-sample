@@ -4,12 +4,22 @@ import { NetworkType, Account, TransferTransaction,
     Listener, TransactionHttp, Transaction,
     MultisigCosignatoryModification,
     MultisigAccountModificationTransaction,
-    CosignatoryModificationAction} from 'nem2-sdk';
-import { ApostilleAccount } from '../model/ApostilleAccount';
-import { filter } from 'rxjs/operators';
+    CosignatoryModificationAction,
+    PublicAccount,
+    SignedTransaction,
+    HashLockTransaction,
+    NetworkCurrencyMosaic,
+    UInt64} from 'nem2-sdk';
+import { ApostilleAccount, SignType } from '../model/ApostilleAccount';
+import { filter, mergeMap } from 'rxjs/operators';
 import { AnnounceResult } from '../model/AnnounceResult';
 import * as NodeWebSocket from 'ws';
 import { Sinks } from '../model/Sink';
+
+export enum ApostilleServiceType {
+  Create,
+  Update,
+}
 
 export class ApostilleService {
 
@@ -21,15 +31,57 @@ export class ApostilleService {
   private metadataTransaction?: InnerTransaction;
   private assignOwnershipTransaction?: InnerTransaction;
 
+  public static createApostille(data: string,
+                                filename: string,
+                                hashFunction: HashFunction,
+                                ownerPrivateKey: string,
+                                url: string,
+                                networkType: NetworkType,
+                                networkGenerationHash: string,
+    ) {
+    return new ApostilleService(data, filename, hashFunction,
+                                url, networkType, ownerPrivateKey, networkGenerationHash,
+                                ApostilleServiceType.Create);
+  }
+
+  public static updateApostille(data: string,
+                                filename: string,
+                                hashFunction: HashFunction,
+                                ownerPrivateKey: string,
+                                url: string,
+                                networkType: NetworkType,
+                                networkGenerationHash: string,
+                                apostilleAccount: Account | PublicAccount) {
+    return new ApostilleService(data, filename, hashFunction,
+                                url, networkType, ownerPrivateKey,
+                                networkGenerationHash,
+                                ApostilleServiceType.Update,
+                                apostilleAccount);
+  }
+
+  /**
+   * @deprecated
+   * Public use will be deprecated.
+   * You should replace ApostilleService.createApostille or ApostilleService.updateApostille
+   */
   public constructor(private data: string,
                      filename: string,
                      private hashFunction: HashFunction,
                      private url: string,
                      private networkType: NetworkType,
                      ownerPrivateKey: string,
-                     private networkGenerationHash) {
+                     private networkGenerationHash,
+                     private serviceType?: ApostilleServiceType,
+                     existApostilleAccount?: Account | PublicAccount) {
     this.ownerAccount = Account.createFromPrivateKey(ownerPrivateKey, networkType);
-    this.apostilleAccount = ApostilleAccount.create(filename, this.ownerAccount);
+    if (!this.serviceType) {
+      this.serviceType = ApostilleServiceType.Create;
+    }
+    if (existApostilleAccount) {
+      this.apostilleAccount = ApostilleAccount.createWithExistAccount(existApostilleAccount);
+    } else {
+      this.apostilleAccount = ApostilleAccount.create(filename, this.ownerAccount);
+    }
   }
 
   public createCoreTransaction() {
@@ -43,7 +95,7 @@ export class ApostilleService {
     this.coreTransaction = transaction.toAggregate(this.ownerAccount.publicAccount);
   }
 
-  public createAnnouncePublicSinkTransaction() {
+  public addAnnouncePublicSinkTransaction() {
     const sinkAddress = Sinks.getAddress(this.networkType);
     const transaction = TransferTransaction.create(
       Deadline.create(),
@@ -56,7 +108,14 @@ export class ApostilleService {
       transaction.toAggregate(this.apostilleAccount.publicAccount);
   }
 
-  public createAssignOwnershipTransaction() {
+  /**
+   * @deprecated
+   */
+  public createAnnouncePublicSinkTransaction() {
+    this.addAnnouncePublicSinkTransaction();
+  }
+
+  public addAssignOwnershipTransaction() {
     const transaction = MultisigAccountModificationTransaction.create(
       Deadline.create(),
       1,
@@ -72,7 +131,18 @@ export class ApostilleService {
     this.assignOwnershipTransaction = transaction.toAggregate(this.apostilleAccount.publicAccount);
   }
 
-  public createMetadataTransaction(metadata: any) {
+  /**
+   * @deprecated
+   */
+  public createAssignOwnershipTransaction() {
+    this.addAssignOwnershipTransaction();
+  }
+
+  /**
+   * InnerTransaction's metadata will be deprecated when NIP4 will be updated.
+   * @param metadata
+   */
+  public addMetadataTransaction(metadata: any) {
     const message = JSON.stringify(metadata);
     const transaction = TransferTransaction.create(
       Deadline.create(),
@@ -84,9 +154,24 @@ export class ApostilleService {
     this.metadataTransaction = transaction.toAggregate(this.apostilleAccount.publicAccount);
   }
 
+  /**
+   * @deprecated
+   * @param metadata
+   */
+  public createMetadataTransaction(metadata: any) {
+    this.addMetadataTransaction(metadata);
+  }
+
   public announce(webSocket?: any) {
-    if (!this.isAnnounceable()) {
-      throw Error('can not announceable');
+    if (this.serviceType === ApostilleServiceType.Create) {
+      return this.announceForCreate(webSocket);
+    }
+    return this.announceForUpdate(webSocket);
+  }
+
+  private announceForComplete(signedTransaction: SignedTransaction, webSocket?: any) {
+    if (!this.canAnnounce()) {
+      throw Error('can not announce');
     }
 
     const transactionHttp = new TransactionHttp(this.url);
@@ -96,7 +181,6 @@ export class ApostilleService {
       ws = NodeWebSocket.default;
     }
     const listener = new Listener(wsEndpoint, ws);
-    const signedTransaction = this.signTransaction();
     return new Promise<AnnounceResult>((resolve, reject) => {
       listener.open().then(() => {
         listener
@@ -116,7 +200,7 @@ export class ApostilleService {
             const announceResult = new AnnounceResult(result.transactionInfo!.hash!,
                                                       this.signedFileHash(),
                                                       this.ownerAccount.publicAccount,
-                                                      this.apostilleAccount.account);
+                                                      this.apostilleAccount);
             listener.close();
             resolve(announceResult);
           });
@@ -129,33 +213,131 @@ export class ApostilleService {
     });
   }
 
-  private signTransaction() {
-    const aggregateTransaction = this.createAggregateTransaction();
-    if (this.needApostilleAccountsSign()) {
-      return this.ownerAccount.signTransactionWithCosignatories(
-        aggregateTransaction,
-        [this.apostilleAccount.account],
-        this.networkGenerationHash,
-      );
+  private announceForBonded(signedTransaction: SignedTransaction, webSocket?: any) {
+    if (!this.canAnnounce()) {
+      throw Error('can not announce');
     }
 
-    return this.ownerAccount.sign(aggregateTransaction, this.networkGenerationHash);
+    const hashLockTransaction = HashLockTransaction.create(
+      Deadline.create(),
+      NetworkCurrencyMosaic.createRelative(10),
+      UInt64.fromUint(480),
+      signedTransaction,
+      this.networkType,
+    );
+
+    const hashLockTransactionSigned = this.ownerAccount.sign(hashLockTransaction,
+                                                             this.networkGenerationHash);
+    const transactionHttp = new TransactionHttp(this.url);
+    const wsEndpoint = this.url.replace('http', 'ws');
+    let ws = webSocket;
+    if (!ws) {
+      ws = NodeWebSocket.default;
+    }
+    const listener = new Listener(wsEndpoint, ws);
+    return new Promise<AnnounceResult>((resolve, reject) => {
+      listener.open().then(() => {
+        transactionHttp.announce(hashLockTransactionSigned)
+        .subscribe(x => console.log(x),
+                   (err) => {
+                     console.error(err);
+                     reject(err);
+                   });
+      });
+      listener.confirmed(this.ownerAccount.address)
+      .pipe(
+        filter(transaction => transaction.transactionInfo !== undefined &&
+        transaction.transactionInfo.hash === hashLockTransactionSigned.hash),
+        mergeMap(ignored => transactionHttp.announceAggregateBonded(signedTransaction)),
+      );
+      listener.unconfirmedAdded(this.ownerAccount.address)
+      .pipe(
+        filter((transaction => transaction.transactionInfo !== undefined &&
+          transaction.transactionInfo.hash === signedTransaction.hash)),
+      ).subscribe((result) => {
+        const announceResult = new AnnounceResult(
+          result.transactionInfo!.hash!,
+          this.signedFileHash(),
+          this.ownerAccount.publicAccount,
+          this.apostilleAccount,
+        );
+        listener.close(),
+        resolve(announceResult);
+      },
+      );
+    });
   }
 
-  private needApostilleAccountsSign() {
-    if (this.metadataTransaction || this.assignOwnershipTransaction
-      || this.announcePublicSinkTransaction) {
+  private announceForCreate(webSocket?: any) {
+    const aggregateTransaction = this.createAggregateCompleteTransaction();
+    if (this.needApostilleAccountSign()) {
+      const signedTransaction = this.ownerAccount.signTransactionWithCosignatories(
+        aggregateTransaction,
+        [this.apostilleAccount.account as Account],
+        this.networkGenerationHash,
+      );
+      return this.announceForComplete(signedTransaction, webSocket);
+    }
+
+    const signedTransaction = this.ownerAccount.sign(aggregateTransaction,
+                                                     this.networkGenerationHash);
+    return this.announceForComplete(signedTransaction, webSocket);
+  }
+
+  private async announceForUpdate(webSocket?: any) {
+    const signType = await this.signTypeForUpdate();
+
+    if (signType === SignType.NeedOtherCosignatory) {
+      const transaction = this.createAggregateBondedTransaction();
+      const signedTranasction = this.ownerAccount.sign(transaction, this.networkGenerationHash);
+      return this.announceForBonded(signedTranasction, webSocket);
+    }
+    const transaction = this.createAggregateCompleteTransaction();
+    if (signType === SignType.SingleCosignatoryOnly) {
+      const signedTransaction = this.ownerAccount.sign(transaction, this.networkGenerationHash);
+      return this.announceForComplete(signedTransaction, webSocket);
+    }
+    if (this.needApostilleAccountSign()) {
+      const signedTransaction = this.ownerAccount.signTransactionWithCosignatories(
+        transaction,
+        [this.apostilleAccount.account as Account],
+        this.networkGenerationHash,
+      );
+      return this.announceForComplete(signedTransaction, webSocket);
+    }
+    const signedTransaction = this.ownerAccount.sign(transaction, this.networkGenerationHash);
+    return this.announceForComplete(signedTransaction, webSocket);
+  }
+
+  private needApostilleAccountSign() {
+    if (this.apostilleAccount.account !== undefined
+      && (this.metadataTransaction || this.assignOwnershipTransaction
+      || this.announcePublicSinkTransaction)) {
       return true;
     }
     return false;
   }
 
-  private createAggregateTransaction() {
+  private async signTypeForUpdate() {
+    const signType = await this.apostilleAccount.needSignType(this.url,
+                                                              this.ownerAccount.publicKey);
+    return signType;
+  }
+
+  private createAggregateCompleteTransaction() {
     return AggregateTransaction.createComplete(
       Deadline.create(),
       this.innerTransactions(),
       this.networkType,
       [],
+    );
+  }
+
+  private createAggregateBondedTransaction() {
+    return AggregateTransaction.createBonded(
+      Deadline.create(),
+      this.innerTransactions(),
+      this.networkType,
     );
   }
 
@@ -180,7 +362,7 @@ export class ApostilleService {
                                                          this.networkType);
   }
 
-  private isAnnounceable() {
+  private canAnnounce() {
     return (this.coreTransaction instanceof Transaction);
   }
 }

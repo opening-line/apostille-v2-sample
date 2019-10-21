@@ -13,16 +13,16 @@ const url = 'https://fushicho.opening-line.jp:3001';
 const networkGenerationHash = 'C053E2FFF5BD10D563962B44919D1F3E51D15BEA4602EB4CDB78BF3C211FF030';
 const metadata = { filename: '90681.jpeg', description: 'daoka icon' };
 
-const apostilleService = new ApostilleService(fileData, filename,
-                                              sha256, url,
-                                              NetworkType.MIJIN_TEST, ownerPrivateKey,
-                                              networkGenerationHash);
+const apostilleService = ApostilleService.createApostille(fileData, filename, sha256,
+                                                          ownerPrivateKey, url,
+                                                          NetworkType.MIJIN_TEST,
+                                                          networkGenerationHash);
 
 apostilleService.createCoreTransaction();
-apostilleService.createAnnouncePublicSinkTransaction();
-apostilleService.createAssignOwnershipTransaction();
-apostilleService.createMetadataTransaction(metadata);
-apostilleService.announce().then(
+apostilleService.addAnnouncePublicSinkTransaction();
+apostilleService.addAssignOwnershipTransaction();
+apostilleService.addMetadataTransaction(metadata);
+apostilleService.announce()!.then(
   (x) => {
     console.log(`txhash: ${x.txHash}`);
     console.log(`filehash: ${x.fileHash}`);

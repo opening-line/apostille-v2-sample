@@ -1,6 +1,6 @@
 {
-  "name": "@opening-line/apostille-v2-sample",
-  "version": "0.5.2",
+  "name": "@opening-line/light-apostille-library",
+  "version": "0.6.0",
   "description": "",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
