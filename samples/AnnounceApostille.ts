@@ -21,6 +21,7 @@ const apostilleService = ApostilleService.createApostille(fileData, filename, sh
 apostilleService.createCoreTransaction();
 apostilleService.addAnnouncePublicSinkTransaction();
 apostilleService.addAssignOwnershipTransaction();
+// apostilleService.addLegacyMetadataTransaction(metadata);
 apostilleService.addMetadataTransaction(metadata);
 apostilleService.announce()!.then(
   (x) => {
