@@ -15,6 +15,7 @@ import { filter, mergeMap } from 'rxjs/operators';
 import { AnnounceResult } from '../model/AnnounceResult';
 import * as NodeWebSocket from 'ws';
 import { Sinks } from '../model/Sink';
+import { MetadataTransaction } from '../model/MetadataTransaction';
 
 export enum ApostilleServiceType {
   Create,
@@ -28,7 +29,8 @@ export class ApostilleService {
 
   private coreTransaction?: InnerTransaction;
   private announcePublicSinkTransaction?: InnerTransaction;
-  private metadataTransaction?: InnerTransaction;
+  private legacyMetadataTransaction?: InnerTransaction;
+  private metadataTransactions?: InnerTransaction[];
   private assignOwnershipTransaction?: InnerTransaction;
 
   public static createApostille(data: string,
@@ -139,10 +141,11 @@ export class ApostilleService {
   }
 
   /**
+   * @deprecated
    * InnerTransaction's metadata will be deprecated when NIP4 will be updated.
    * @param metadata
    */
-  public addMetadataTransaction(metadata: any) {
+  public addLegacyMetadataTransaction(metadata: any) {
     const message = JSON.stringify(metadata);
     const transaction = TransferTransaction.create(
       Deadline.create(),
@@ -151,7 +154,15 @@ export class ApostilleService {
       PlainMessage.create(message),
       this.networkType,
     );
-    this.metadataTransaction = transaction.toAggregate(this.apostilleAccount.publicAccount);
+    this.legacyMetadataTransaction = transaction.toAggregate(this.apostilleAccount.publicAccount);
+  }
+
+  public addMetadataTransaction(metadata: Object) {
+    const transactions = MetadataTransaction
+    .objectToMetadataTransactions(metadata,
+                                  this.ownerAccount.publicAccount,
+                                  this.apostilleAccount.publicAccount, this.networkType);
+    this.metadataTransactions = transactions;
   }
 
   /**
@@ -159,7 +170,7 @@ export class ApostilleService {
    * @param metadata
    */
   public createMetadataTransaction(metadata: any) {
-    this.addMetadataTransaction(metadata);
+    this.addLegacyMetadataTransaction(metadata);
   }
 
   public announce(webSocket?: any) {
@@ -311,8 +322,8 @@ export class ApostilleService {
 
   private needApostilleAccountSign() {
     if (this.apostilleAccount.account !== undefined
-      && (this.metadataTransaction || this.assignOwnershipTransaction
-      || this.announcePublicSinkTransaction)) {
+      && (this.legacyMetadataTransaction || this.assignOwnershipTransaction
+      || this.announcePublicSinkTransaction || this.metadataTransactions)) {
       return true;
     }
     return false;
@@ -350,8 +361,11 @@ export class ApostilleService {
     if (this.assignOwnershipTransaction) {
       innerTransactions.push(this.assignOwnershipTransaction!);
     }
-    if (this.metadataTransaction) {
-      innerTransactions.push(this.metadataTransaction!);
+    if (this.metadataTransactions) {
+      Array.prototype.push.apply(innerTransactions, this.metadataTransactions);
+    }
+    if (this.legacyMetadataTransaction) {
+      innerTransactions.push(this.legacyMetadataTransaction!);
     }
     return innerTransactions;
   }

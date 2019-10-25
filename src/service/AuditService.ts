@@ -1,12 +1,13 @@
 import { PublicAccount, NetworkType, TransactionHttp, Transaction,
-   AggregateTransaction, TransferTransaction, Address, BlockHttp } from 'nem2-sdk';
-import { AuditPayload } from '../utils/utils';
+   AggregateTransaction, TransferTransaction, Address, BlockHttp, MetadataHttp } from 'nem2-sdk';
+import { AuditPayload, MetadataKeyHelper } from '../utils/utils';
 import { AuditResult } from '../model/AuditResult';
 import { Sinks } from '../model/Sink';
 
 export class AuditService {
 
   private ownerPublicAccount?: PublicAccount;
+  private apostilleAddress?: Address;
 
   private coreTransaction?: TransferTransaction;
   private metadata?: any;
@@ -25,6 +26,7 @@ export class AuditService {
       }
       this.parseInnerTransaction(transaction as AggregateTransaction);
       const payload = this.getCoreTransactionPayload();
+      await this.getMetadataFromAccountMetadata();
       const auditResult = AuditPayload.audit(this.data, payload,
                                              this.ownerPublicAccount!.publicKey, this.networkType);
       if (auditResult) {
@@ -59,9 +61,10 @@ export class AuditService {
     transaction.innerTransactions.forEach((innerTransaction) => {
       if (this.isCoreTransaction(innerTransaction)) {
         this.coreTransaction = innerTransaction as TransferTransaction;
+        this.apostilleAddress = this.coreTransaction.recipientAddress as Address;
         this.ownerPublicAccount = innerTransaction.signer;
       }
-      if (this.isMetadataTransaction(innerTransaction)) {
+      if (this.isLegacyMetadataTransaction(innerTransaction)) {
         const tx = innerTransaction as TransferTransaction;
         this.metadata = JSON.parse(tx.message.payload);
       }
@@ -81,7 +84,7 @@ export class AuditService {
     return false;
   }
 
-  private isMetadataTransaction(transaction: Transaction) {
+  private isLegacyMetadataTransaction(transaction: Transaction) {
     if (transaction instanceof TransferTransaction &&
       (transaction.recipientAddress as Address).equals(transaction.signer!.address)) {
       return true;
@@ -111,6 +114,25 @@ export class AuditService {
     const blockInfo = await blockchainHttp.getBlockByHeight(blockHeight.compact()).toPromise();
     const timestamp = blockInfo.timestamp.compact();
     return timestamp + new Date(Date.UTC(2016, 3, 1, 0, 0, 0, 0)).getTime();
+  }
+
+  private async getMetadataFromAccountMetadata() {
+    const metadataHttp = new MetadataHttp(this.url);
+    const metadataInfos = await metadataHttp.getAccountMetadata(this.apostilleAddress!)
+    .toPromise();
+    if (!metadataInfos) {
+      return null;
+    }
+
+    const metadata = {};
+    metadataInfos.forEach((m) => {
+      const uint64Key = m.metadataEntry.scopedMetadataKey;
+      const key = MetadataKeyHelper.getKeyNameWithKeyId(uint64Key);
+      const value = m.metadataEntry.value;
+      metadata[key] = value;
+    });
+
+    this.metadata = metadata;
   }
 
   public static audit(data: string, txHash: string,

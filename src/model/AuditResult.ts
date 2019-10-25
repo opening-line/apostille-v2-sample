@@ -7,6 +7,6 @@ export class AuditResult {
               public readonly ownerPublicAccount?: PublicAccount,
               public readonly apostilleAddress?: Address,
               public readonly timestamp?: number,
-              public readonly metadata?: any,
+              public readonly metadata?: Object,
     ) {}
 }
