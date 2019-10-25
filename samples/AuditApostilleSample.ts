@@ -6,7 +6,7 @@ const url = 'https://fushicho.opening-line.jp:3001';
 const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
 // const file = fs.readFileSync(`${__dirname}/file/dummy.txt`);
 const fileData = file.toString('hex');
-const txHash = '2E1EA9AAACA4659898CB62064CDDB6BA4EBF8ECD50FA05BEAF69C5B40680DFE9';
+const txHash = '9F6FED34FDEF6CF95B54FAE54C6ECFBF2A8AB8DC975668A312346A7700B0AF60';
 
 run();
 
@@ -19,5 +19,10 @@ async function run() {
   console.log(`ownerPublicAccount: ${result.ownerPublicAccount!.publicKey}`);
   console.log(`ApostilleAddress: ${result.apostilleAddress!.plain()}`);
   console.log(`timestamp: ${new Date(result.timestamp!)}`);
-  console.log(`metadata: ${result.metadata}`);
+  if (result.metadata) {
+    console.log('- metadata -');
+    Object.keys(result.metadata).forEach((key) => {
+      console.log(`${key}: ${result.metadata![key]}`);
+    });
+  }
 }
