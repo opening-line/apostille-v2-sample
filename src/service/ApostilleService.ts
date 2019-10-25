@@ -160,8 +160,8 @@ export class ApostilleService {
   public addMetadataTransaction(metadata: Object) {
     const transactions = MetadataTransaction
     .objectToMetadataTransactions(metadata,
-                                  this.ownerAccount.publicAccount,
-                                  this.apostilleAccount.publicAccount, this.networkType);
+                                  this.apostilleAccount.publicAccount,
+                                  this.networkType);
     this.metadataTransactions = transactions;
   }
 

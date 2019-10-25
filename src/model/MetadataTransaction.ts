@@ -6,7 +6,6 @@ export class MetadataTransaction {
   private networkType: NetworkType;
   constructor(private key: string,
               private value: string,
-              private ownerAccount: PublicAccount,
               private apostilleAccount: PublicAccount,
               networkType?: NetworkType) {
     if (!networkType) {
@@ -26,19 +25,19 @@ export class MetadataTransaction {
       this.networkType,
     );
 
-    const innerTransaction = metadataTransaction.toAggregate(this.ownerAccount);
+    const innerTransaction = metadataTransaction.toAggregate(this.apostilleAccount);
 
     return innerTransaction;
   }
 
   public static objectToMetadataTransactions(obj: Object,
-                                             ownerAccount: PublicAccount,
                                              apostilleAccount: PublicAccount,
                                              networkType?: NetworkType) {
     const metadataTransactions: InnerTransaction[] = [];
     Object.entries(obj).forEach(([key, value]) => {
-      const metadataTxObj = new MetadataTransaction(key, value, ownerAccount,
-                                                    apostilleAccount, networkType);
+      const metadataTxObj = new MetadataTransaction(key, value,
+                                                    apostilleAccount,
+                                                    networkType);
       metadataTransactions.push(metadataTxObj.toCreateMetadataTransaction());
     });
 
