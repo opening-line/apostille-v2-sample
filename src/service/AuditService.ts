@@ -111,7 +111,7 @@ export class AuditService {
   private async getTransactionTimestamp(transaction: Transaction) {
     const blockHeight = transaction.transactionInfo!.height;
     const blockchainHttp = new BlockHttp(this.url);
-    const blockInfo = await blockchainHttp.getBlockByHeight(blockHeight.compact()).toPromise();
+    const blockInfo = await blockchainHttp.getBlockByHeight(blockHeight.toString()).toPromise();
     const timestamp = blockInfo.timestamp.compact();
     return timestamp + new Date(Date.UTC(2016, 3, 1, 0, 0, 0, 0)).getTime();
   }

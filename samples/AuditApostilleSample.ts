@@ -2,11 +2,11 @@ import { AuditService } from '../src/service/AuditService';
 import { NetworkType } from 'nem2-sdk';
 import * as fs from 'fs';
 
-const url = 'https://fushicho.opening-line.jp:3001';
+const url = 'https://fushicho2-nofee.opening-line.jp:3001';
 const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
 // const file = fs.readFileSync(`${__dirname}/file/dummy.txt`);
 const fileData = file.toString('hex');
-const txHash = '9F6FED34FDEF6CF95B54FAE54C6ECFBF2A8AB8DC975668A312346A7700B0AF60';
+const txHash = 'B2453A0155906D46BEE0510AEEB6BFD4FAFEF5D03DF7EED004D0967AEB0E6830';
 
 run();
 
