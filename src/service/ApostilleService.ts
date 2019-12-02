@@ -2,9 +2,7 @@ import { HashFunction } from '../hash/HashFunction';
 import { NetworkType, Account, TransferTransaction,
     Deadline, PlainMessage, InnerTransaction, AggregateTransaction,
     Listener, TransactionHttp, Transaction,
-    MultisigCosignatoryModification,
     MultisigAccountModificationTransaction,
-    CosignatoryModificationAction,
     PublicAccount,
     SignedTransaction,
     HashLockTransaction,
@@ -123,11 +121,9 @@ export class ApostilleService {
       1,
       1,
       [
-        new MultisigCosignatoryModification(
-          CosignatoryModificationAction.Add,
-          this.ownerAccount.publicAccount,
-        ),
+        this.ownerAccount.publicAccount,
       ],
+      [],
       this.networkType,
     );
     this.assignOwnershipTransaction = transaction.toAggregate(this.apostilleAccount.publicAccount);

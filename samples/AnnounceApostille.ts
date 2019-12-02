@@ -9,8 +9,8 @@ const fileData = file.toString('hex');
 const filename = '90681.png';
 const ownerPrivateKey = Account.generateNewAccount(NetworkType.MIJIN_TEST).privateKey;
 const sha256 = new SHA256();
-const url = 'https://fushicho.opening-line.jp:3001';
-const networkGenerationHash = 'C053E2FFF5BD10D563962B44919D1F3E51D15BEA4602EB4CDB78BF3C211FF030';
+const url = 'https://fushicho2-nofee.opening-line.jp:3001';
+const networkGenerationHash = 'A13A79D7441FDB856D8E366AEC3153DFA7554A9471E9C41E1E351680BA48B9FB';
 const metadata = { filename: '90681.jpeg', description: 'daoka icon' };
 
 const apostilleService = ApostilleService.createApostille(fileData, filename, sha256,
