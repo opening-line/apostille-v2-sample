@@ -47,7 +47,6 @@ export class ApostilleAccount {
 
   public async needSignType(networkUrl: string, cosignatoryPublicKey?: string) {
     try {
-      // const accountHttp = new AccountHttp(networkUrl);
       const multisigHttp = new MultisigHttp(networkUrl);
       const multsigInfo = await multisigHttp.getMultisigAccountInfo(this.address).toPromise();
       if (multsigInfo.cosignatories.length > 0) {
