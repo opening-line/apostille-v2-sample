@@ -38,10 +38,11 @@ export class ApostilleService {
                                 url: string,
                                 networkType: NetworkType,
                                 networkGenerationHash: string,
+                                isFeeNetwork?: boolean,
     ) {
     return new ApostilleService(data, filename, hashFunction,
                                 url, networkType, ownerPrivateKey, networkGenerationHash,
-                                ApostilleServiceType.Create);
+                                ApostilleServiceType.Create, undefined, isFeeNetwork);
   }
 
   public static updateApostille(data: string,
@@ -51,12 +52,14 @@ export class ApostilleService {
                                 url: string,
                                 networkType: NetworkType,
                                 networkGenerationHash: string,
-                                apostilleAccount: Account | PublicAccount) {
+                                apostilleAccount: Account | PublicAccount,
+                                isFeeNetwork?: boolean,
+                                ) {
     return new ApostilleService(data, filename, hashFunction,
                                 url, networkType, ownerPrivateKey,
                                 networkGenerationHash,
                                 ApostilleServiceType.Update,
-                                apostilleAccount);
+                                apostilleAccount, isFeeNetwork);
   }
 
   /**
@@ -72,7 +75,8 @@ export class ApostilleService {
                      ownerPrivateKey: string,
                      private networkGenerationHash,
                      private serviceType?: ApostilleServiceType,
-                     existApostilleAccount?: Account | PublicAccount) {
+                     existApostilleAccount?: Account | PublicAccount,
+                     private isFeeNetwork?: boolean) {
     this.ownerAccount = Account.createFromPrivateKey(ownerPrivateKey, networkType);
     if (!this.serviceType) {
       this.serviceType = ApostilleServiceType.Create;
@@ -181,6 +185,9 @@ export class ApostilleService {
       throw Error('can not announce');
     }
 
+    // TODO: Temp comment
+    console.log(`txHash: ${signedTransaction.hash}`);
+
     const transactionHttp = new TransactionHttp(this.url);
     const wsEndpoint = this.url.replace('http', 'ws');
     let ws = webSocket;
@@ -224,6 +231,9 @@ export class ApostilleService {
     if (!this.canAnnounce()) {
       throw Error('can not announce');
     }
+
+    // TODO: Temp comment
+    console.log(`txHash: ${signedTransaction.hash}`);
 
     const hashLockTransaction = HashLockTransaction.create(
       Deadline.create(),
@@ -332,19 +342,30 @@ export class ApostilleService {
   }
 
   private createAggregateCompleteTransaction() {
+    let fee = 0;
+    if (this.isFeeNetwork) {
+      fee = 250000;
+    }
     return AggregateTransaction.createComplete(
       Deadline.create(),
       this.innerTransactions(),
       this.networkType,
       [],
+      UInt64.fromUint(fee),
     );
   }
 
   private createAggregateBondedTransaction() {
+    let fee = 0;
+    if (this.isFeeNetwork) {
+      fee = 250000;
+    }
     return AggregateTransaction.createBonded(
       Deadline.create(),
       this.innerTransactions(),
       this.networkType,
+      [],
+      UInt64.fromUint(fee),
     );
   }
 
