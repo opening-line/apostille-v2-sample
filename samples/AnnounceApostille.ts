@@ -1,22 +1,22 @@
 import { ApostilleService } from '../src/service/ApostilleService';
 import { SHA256 } from '../src/hash/hash';
-import { NetworkType, Account } from 'nem2-sdk';
+import { NetworkType } from 'nem2-sdk';
 import * as fs from 'fs';
 
 console.log(__dirname);
 const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
 const fileData = file.toString('hex');
-const filename = '90681.png';
-const ownerPrivateKey = Account.generateNewAccount(NetworkType.MIJIN_TEST).privateKey;
+const filename = `${Math.random().toString(32).substring(2)}.png`;
+const ownerPrivateKey = '73C874F7BC7F81AA2B3CD064B5A9FB9AD08923161F18CE04A4326E0026DCF78E';
 const sha256 = new SHA256();
-const url = 'https://fushicho2-nofee.opening-line.jp:3001';
-const networkGenerationHash = 'A13A79D7441FDB856D8E366AEC3153DFA7554A9471E9C41E1E351680BA48B9FB';
+const url = 'https://fushicho2-fee.opening-line.jp:3001';
+const networkGenerationHash = 'CCD475695907114DD465FBFB0C53B1CF335258A6C3730DBAAF63FD5AA35B7697';
 const metadata = { filename: '90681.jpeg', description: 'daoka icon' };
 
 const apostilleService = ApostilleService.createApostille(fileData, filename, sha256,
                                                           ownerPrivateKey, url,
                                                           NetworkType.MIJIN_TEST,
-                                                          networkGenerationHash);
+                                                          networkGenerationHash, 1000);
 
 apostilleService.createCoreTransaction();
 apostilleService.addAnnouncePublicSinkTransaction();

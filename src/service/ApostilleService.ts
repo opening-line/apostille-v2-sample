@@ -31,6 +31,8 @@ export class ApostilleService {
   private metadataTransactions?: InnerTransaction[];
   private assignOwnershipTransaction?: InnerTransaction;
 
+  private feeMultiplier: number;
+
   public static createApostille(data: string,
                                 filename: string,
                                 hashFunction: HashFunction,
@@ -38,10 +40,11 @@ export class ApostilleService {
                                 url: string,
                                 networkType: NetworkType,
                                 networkGenerationHash: string,
+                                feeMultiplier?: number,
     ) {
     return new ApostilleService(data, filename, hashFunction,
                                 url, networkType, ownerPrivateKey, networkGenerationHash,
-                                ApostilleServiceType.Create);
+                                ApostilleServiceType.Create, feeMultiplier);
   }
 
   public static updateApostille(data: string,
@@ -51,11 +54,14 @@ export class ApostilleService {
                                 url: string,
                                 networkType: NetworkType,
                                 networkGenerationHash: string,
-                                apostilleAccount: Account | PublicAccount) {
+                                apostilleAccount: Account | PublicAccount,
+                                feeMultiplier?: number,
+                                ) {
     return new ApostilleService(data, filename, hashFunction,
                                 url, networkType, ownerPrivateKey,
                                 networkGenerationHash,
                                 ApostilleServiceType.Update,
+                                feeMultiplier,
                                 apostilleAccount);
   }
 
@@ -72,6 +78,7 @@ export class ApostilleService {
                      ownerPrivateKey: string,
                      private networkGenerationHash,
                      private serviceType?: ApostilleServiceType,
+                     feeMultiplier?: number,
                      existApostilleAccount?: Account | PublicAccount) {
     this.ownerAccount = Account.createFromPrivateKey(ownerPrivateKey, networkType);
     if (!this.serviceType) {
@@ -81,6 +88,12 @@ export class ApostilleService {
       this.apostilleAccount = ApostilleAccount.createWithExistAccount(existApostilleAccount);
     } else {
       this.apostilleAccount = ApostilleAccount.create(filename, this.ownerAccount);
+    }
+
+    if (feeMultiplier) {
+      this.feeMultiplier = feeMultiplier;
+    } else {
+      this.feeMultiplier = 0;
     }
   }
 
@@ -181,6 +194,9 @@ export class ApostilleService {
       throw Error('can not announce');
     }
 
+    // TODO: Temp comment
+    console.log(`txHash: ${signedTransaction.hash}`);
+
     const transactionHttp = new TransactionHttp(this.url);
     const wsEndpoint = this.url.replace('http', 'ws');
     let ws = webSocket;
@@ -225,12 +241,26 @@ export class ApostilleService {
       throw Error('can not announce');
     }
 
-    const hashLockTransaction = HashLockTransaction.create(
+    // TODO: Temp comment
+    console.log(`txHash: ${signedTransaction.hash}`);
+
+    const tempTx = HashLockTransaction.create(
       Deadline.create(),
       NetworkCurrencyMosaic.createRelative(10),
       UInt64.fromUint(480),
       signedTransaction,
       this.networkType,
+    );
+
+    const maxFee = this.getMaxFee(tempTx);
+
+    const hashLockTransaction =  HashLockTransaction.create(
+      Deadline.create(),
+      NetworkCurrencyMosaic.createRelative(10),
+      UInt64.fromUint(480),
+      signedTransaction,
+      this.networkType,
+      UInt64.fromUint(maxFee),
     );
 
     const hashLockTransactionSigned = this.ownerAccount.sign(hashLockTransaction,
@@ -332,11 +362,21 @@ export class ApostilleService {
   }
 
   private createAggregateCompleteTransaction() {
+    const tempTx = AggregateTransaction.createComplete(
+      Deadline.create(),
+      this.innerTransactions(),
+      this.networkType,
+      [],
+    );
+
+    const maxFee = this.getMaxFee(tempTx);
+
     return AggregateTransaction.createComplete(
       Deadline.create(),
       this.innerTransactions(),
       this.networkType,
       [],
+      UInt64.fromUint(maxFee),
     );
   }
 
@@ -345,7 +385,12 @@ export class ApostilleService {
       Deadline.create(),
       this.innerTransactions(),
       this.networkType,
+      [],
     );
+  }
+
+  private getMaxFee(transaction: Transaction) {
+    return transaction.size * this.feeMultiplier;
   }
 
   private innerTransactions() {
