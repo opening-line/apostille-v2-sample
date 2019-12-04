@@ -31,6 +31,8 @@ export class ApostilleService {
   private metadataTransactions?: InnerTransaction[];
   private assignOwnershipTransaction?: InnerTransaction;
 
+  private feeMultiplier: number;
+
   public static createApostille(data: string,
                                 filename: string,
                                 hashFunction: HashFunction,
@@ -38,11 +40,11 @@ export class ApostilleService {
                                 url: string,
                                 networkType: NetworkType,
                                 networkGenerationHash: string,
-                                isFeeNetwork?: boolean,
+                                feeMultiplier?: number,
     ) {
     return new ApostilleService(data, filename, hashFunction,
                                 url, networkType, ownerPrivateKey, networkGenerationHash,
-                                ApostilleServiceType.Create, undefined, isFeeNetwork);
+                                ApostilleServiceType.Create, feeMultiplier);
   }
 
   public static updateApostille(data: string,
@@ -53,13 +55,14 @@ export class ApostilleService {
                                 networkType: NetworkType,
                                 networkGenerationHash: string,
                                 apostilleAccount: Account | PublicAccount,
-                                isFeeNetwork?: boolean,
+                                feeMultiplier?: number,
                                 ) {
     return new ApostilleService(data, filename, hashFunction,
                                 url, networkType, ownerPrivateKey,
                                 networkGenerationHash,
                                 ApostilleServiceType.Update,
-                                apostilleAccount, isFeeNetwork);
+                                feeMultiplier,
+                                apostilleAccount);
   }
 
   /**
@@ -75,8 +78,8 @@ export class ApostilleService {
                      ownerPrivateKey: string,
                      private networkGenerationHash,
                      private serviceType?: ApostilleServiceType,
-                     existApostilleAccount?: Account | PublicAccount,
-                     private isFeeNetwork?: boolean) {
+                     feeMultiplier?: number,
+                     existApostilleAccount?: Account | PublicAccount) {
     this.ownerAccount = Account.createFromPrivateKey(ownerPrivateKey, networkType);
     if (!this.serviceType) {
       this.serviceType = ApostilleServiceType.Create;
@@ -85,6 +88,12 @@ export class ApostilleService {
       this.apostilleAccount = ApostilleAccount.createWithExistAccount(existApostilleAccount);
     } else {
       this.apostilleAccount = ApostilleAccount.create(filename, this.ownerAccount);
+    }
+
+    if (feeMultiplier) {
+      this.feeMultiplier = feeMultiplier;
+    } else {
+      this.feeMultiplier = 0;
     }
   }
 
@@ -235,12 +244,23 @@ export class ApostilleService {
     // TODO: Temp comment
     console.log(`txHash: ${signedTransaction.hash}`);
 
-    const hashLockTransaction = HashLockTransaction.create(
+    const tempTx = HashLockTransaction.create(
       Deadline.create(),
       NetworkCurrencyMosaic.createRelative(10),
       UInt64.fromUint(480),
       signedTransaction,
       this.networkType,
+    );
+
+    const maxFee = this.getMaxFee(tempTx);
+
+    const hashLockTransaction =  HashLockTransaction.create(
+      Deadline.create(),
+      NetworkCurrencyMosaic.createRelative(10),
+      UInt64.fromUint(480),
+      signedTransaction,
+      this.networkType,
+      UInt64.fromUint(maxFee),
     );
 
     const hashLockTransactionSigned = this.ownerAccount.sign(hashLockTransaction,
@@ -342,31 +362,35 @@ export class ApostilleService {
   }
 
   private createAggregateCompleteTransaction() {
-    let fee = 0;
-    if (this.isFeeNetwork) {
-      fee = 250000;
-    }
+    const tempTx = AggregateTransaction.createComplete(
+      Deadline.create(),
+      this.innerTransactions(),
+      this.networkType,
+      [],
+    );
+
+    const maxFee = this.getMaxFee(tempTx);
+
     return AggregateTransaction.createComplete(
       Deadline.create(),
       this.innerTransactions(),
       this.networkType,
       [],
-      UInt64.fromUint(fee),
+      UInt64.fromUint(maxFee),
     );
   }
 
   private createAggregateBondedTransaction() {
-    let fee = 0;
-    if (this.isFeeNetwork) {
-      fee = 250000;
-    }
     return AggregateTransaction.createBonded(
       Deadline.create(),
       this.innerTransactions(),
       this.networkType,
       [],
-      UInt64.fromUint(fee),
     );
+  }
+
+  private getMaxFee(transaction: Transaction) {
+    return transaction.size * this.feeMultiplier;
   }
 
   private innerTransactions() {

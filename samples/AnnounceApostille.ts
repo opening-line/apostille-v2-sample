@@ -16,7 +16,7 @@ const metadata = { filename: '90681.jpeg', description: 'daoka icon' };
 const apostilleService = ApostilleService.createApostille(fileData, filename, sha256,
                                                           ownerPrivateKey, url,
                                                           NetworkType.MIJIN_TEST,
-                                                          networkGenerationHash, true);
+                                                          networkGenerationHash, 1000);
 
 apostilleService.createCoreTransaction();
 apostilleService.addAnnouncePublicSinkTransaction();
