@@ -194,9 +194,6 @@ export class ApostilleService {
       throw Error('can not announce');
     }
 
-    // TODO: Temp comment
-    console.log(`txHash: ${signedTransaction.hash}`);
-
     const transactionHttp = new TransactionHttp(this.url);
     const wsEndpoint = this.url.replace('http', 'ws');
     let ws = webSocket;
@@ -241,27 +238,13 @@ export class ApostilleService {
       throw Error('can not announce');
     }
 
-    // TODO: Temp comment
-    console.log(`txHash: ${signedTransaction.hash}`);
-
-    const tempTx = HashLockTransaction.create(
+    const hashLockTransaction = HashLockTransaction.create(
       Deadline.create(),
       NetworkCurrencyMosaic.createRelative(10),
       UInt64.fromUint(480),
       signedTransaction,
       this.networkType,
-    );
-
-    const maxFee = this.getMaxFee(tempTx);
-
-    const hashLockTransaction =  HashLockTransaction.create(
-      Deadline.create(),
-      NetworkCurrencyMosaic.createRelative(10),
-      UInt64.fromUint(480),
-      signedTransaction,
-      this.networkType,
-      UInt64.fromUint(maxFee),
-    );
+    ).setMaxFee(this.feeMultiplier) as HashLockTransaction;
 
     const hashLockTransactionSigned = this.ownerAccount.sign(hashLockTransaction,
                                                              this.networkGenerationHash);
@@ -362,22 +345,14 @@ export class ApostilleService {
   }
 
   private createAggregateCompleteTransaction() {
-    const tempTx = AggregateTransaction.createComplete(
+    const tx = AggregateTransaction.createComplete(
       Deadline.create(),
       this.innerTransactions(),
       this.networkType,
       [],
-    );
+    ).setMaxFee(this.feeMultiplier) as AggregateTransaction;
 
-    const maxFee = this.getMaxFee(tempTx);
-
-    return AggregateTransaction.createComplete(
-      Deadline.create(),
-      this.innerTransactions(),
-      this.networkType,
-      [],
-      UInt64.fromUint(maxFee),
-    );
+    return tx;
   }
 
   private createAggregateBondedTransaction() {
@@ -386,11 +361,7 @@ export class ApostilleService {
       this.innerTransactions(),
       this.networkType,
       [],
-    );
-  }
-
-  private getMaxFee(transaction: Transaction) {
-    return transaction.size * this.feeMultiplier;
+    ).setMaxFee(this.feeMultiplier) as AggregateTransaction;
   }
 
   private innerTransactions() {
