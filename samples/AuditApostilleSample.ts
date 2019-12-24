@@ -2,16 +2,16 @@ import { AuditService } from '../src/service/AuditService';
 import { NetworkType } from 'nem2-sdk';
 import * as fs from 'fs';
 
-const url = 'https://fushicho2-nofee.opening-line.jp:3001';
+const url = 'http://ec2-3-136-106-135.us-east-2.compute.amazonaws.com:3000';
 const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
 // const file = fs.readFileSync(`${__dirname}/file/dummy.txt`);
 const fileData = file.toString('hex');
-const txHash = 'B2453A0155906D46BEE0510AEEB6BFD4FAFEF5D03DF7EED004D0967AEB0E6830';
+const txHash = '2C452E55D57057B7EB93D0422CE1BEFE51AC56D22F95DEF8116039473F9CB7E4';
 
 run();
 
 async function run() {
-  const result = await AuditService.audit(fileData, txHash, url, NetworkType.MIJIN_TEST);
+  const result = await AuditService.audit(fileData, txHash, url, NetworkType.TEST_NET);
   console.log('--- audit result ---');
   console.log(`isSuccess: ${result.isSuccess}`);
   console.log(`txHash: ${result.txHash}`);

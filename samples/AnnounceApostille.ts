@@ -7,15 +7,15 @@ console.log(__dirname);
 const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
 const fileData = file.toString('hex');
 const filename = `${Math.random().toString(32).substring(2)}.png`;
-const ownerPrivateKey = '73C874F7BC7F81AA2B3CD064B5A9FB9AD08923161F18CE04A4326E0026DCF78E';
+const ownerPrivateKey = '43E472BE7DCDD9A027F1088CB332E7F755671BE9A72571712F305B998EB3AD60';
 const sha256 = new SHA256();
-const url = 'https://fushicho2-fee.opening-line.jp:3001';
-const networkGenerationHash = 'CCD475695907114DD465FBFB0C53B1CF335258A6C3730DBAAF63FD5AA35B7697';
+const url = 'http://ec2-3-136-106-135.us-east-2.compute.amazonaws.com:3000';
+const networkGenerationHash = '53F0604E403333BAD330503C196FF435A1AF6A4C166F8B967C6E1716D959ED34';
 const metadata = { filename: '90681.jpeg', description: 'daoka icon' };
 
 const apostilleService = ApostilleService.createApostille(fileData, filename, sha256,
                                                           ownerPrivateKey, url,
-                                                          NetworkType.MIJIN_TEST,
+                                                          NetworkType.TEST_NET,
                                                           networkGenerationHash, 1000);
 
 apostilleService.createCoreTransaction();
