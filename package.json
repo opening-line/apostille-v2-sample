@@ -1,6 +1,6 @@
 {
   "name": "@opening-line/light-apostille-library",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -14,19 +14,19 @@
   "dependencies": {
     "js-sha3": "^0.8.0",
     "nem2-sdk": "^0.16.1",
-    "rxjs": "^6.4.0",
+    "rxjs": "^6.5.3",
     "ws": "^6.2.1"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.11",
-    "@types/node": "^11.13.2",
-    "@types/ws": "^6.0.1",
-    "jest": "^24.7.1",
-    "ts-jest": "^24.0.2",
-    "tslint": "^5.15.0",
-    "tslint-config-airbnb": "^5.11.1",
-    "tsutils": "^3.10.0",
-    "typescript": "^3.4.2"
+    "@types/jest": "^24.0.24",
+    "@types/node": "^11.15.3",
+    "@types/ws": "^6.0.4",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.2.0",
+    "tslint": "^5.20.1",
+    "tslint-config-airbnb": "^5.11.2",
+    "tsutils": "^3.17.1",
+    "typescript": "^3.7.4"
   },
   "jest": {
     "moduleFileExtensions": [
