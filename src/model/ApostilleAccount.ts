@@ -9,7 +9,7 @@ const fixPrivateKey = (privateKey) => {
 
 export enum SignType {
   ApostilleAccountOnly,
-  SingleCosignatoryOnly,
+  OneCosignatoryOnly,
   NeedOtherCosignatory,
   CannotSign,
 }
@@ -57,7 +57,7 @@ export class ApostilleAccount {
           return SignType.CannotSign;
         }
         if (multsigInfo.minApproval === 1) {
-          return SignType.SingleCosignatoryOnly;
+          return SignType.OneCosignatoryOnly;
         }
         return SignType.NeedOtherCosignatory;
       }
