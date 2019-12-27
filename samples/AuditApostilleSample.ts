@@ -6,7 +6,7 @@ const url = 'http://ec2-3-136-106-135.us-east-2.compute.amazonaws.com:3000';
 const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
 // const file = fs.readFileSync(`${__dirname}/file/dummy.txt`);
 const fileData = file.toString('hex');
-const txHash = '2C452E55D57057B7EB93D0422CE1BEFE51AC56D22F95DEF8116039473F9CB7E4';
+const txHash = '7FF422A7FA79AF09ABDFBA99E77C348AACE8067A49894BF45D78293B1BFF53AC';
 
 run();
 

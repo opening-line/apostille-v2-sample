@@ -313,7 +313,7 @@ export class ApostilleService {
       return this.announceForBonded(signedTranasction, webSocket);
     }
     const transaction = this.createAggregateCompleteTransaction();
-    if (signType === SignType.SingleCosignatoryOnly) {
+    if (signType === SignType.OneCosignatoryOnly) {
       const signedTransaction = this.ownerAccount.sign(transaction, this.networkGenerationHash);
       return this.announceForComplete(signedTransaction, webSocket);
     }
