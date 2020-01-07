@@ -6,11 +6,11 @@ import * as fs from 'fs';
 console.log(__dirname);
 const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
 const fileData = file.toString('hex');
-const ownerPrivateKey = '43E472BE7DCDD9A027F1088CB332E7F755671BE9A72571712F305B998EB3AD60';
+const ownerPrivateKey = 'DFD40EE55EB215FF96ABCFC8D3E4E02EF77B4158306725DBF4243C91D8CBA774';
 const sha256 = new SHA256();
-const url = 'http://ec2-3-136-106-135.us-east-2.compute.amazonaws.com:3000';
-const networkGenerationHash = '53F0604E403333BAD330503C196FF435A1AF6A4C166F8B967C6E1716D959ED34';
-const apostilleAccountPubKey = '8F35CFF8557269DD8BBA515F2E00F1201EDE99E030FF1F9945C13DA5E0F89790';
+const url = 'https://jp5.nemesis.land:3001';
+const networkGenerationHash = 'CC42AAD7BD45E8C276741AB2524BC30F5529AF162AD12247EF9A98D6B54A385B';
+const apostilleAccountPubKey = 'E461E9C960B7E22E11380D9C514E47682CC407365090B26BD3D6161D22B89A24';
 const apostillePubAccount = PublicAccount.createFromPublicKey(apostilleAccountPubKey,
                                                               NetworkType.TEST_NET);
 
