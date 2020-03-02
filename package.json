@@ -1,6 +1,6 @@
 {
   "name": "@opening-line/light-apostille-library",
-  "version": "0.10.7",
+  "version": "0.11.0",
   "description": "",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "js-sha3": "^0.8.0",
-    "nem2-sdk": "^0.16.2",
+    "nem2-sdk": "^0.16.5",
     "rxjs": "^6.5.3",
     "ws": "^6.2.1"
   },

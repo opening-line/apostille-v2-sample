@@ -114,6 +114,15 @@ export abstract class GeneralApostilleService {
           const result = this.announceResult(signedTx);
           resolve(result);
         });
+        listener.confirmed(this.ownerAccount.address)
+        .pipe(
+          filter(transaction => (transaction.transactionInfo !== undefined
+            && transaction.transactionInfo.hash === signedTx.hash)),
+        ).subscribe((_) => {
+          listener.close();
+          const result = this.announceResult(signedTx);
+          resolve(result);
+        });
         transactionHttp.announce(signedTx).subscribe(
           (_) => {},
           (err) => {
