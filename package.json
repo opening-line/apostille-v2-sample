@@ -18,11 +18,11 @@
     "ws": "^6.2.1"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.24",
+    "@types/jest": "^25.1.3",
     "@types/node": "^11.15.3",
     "@types/ws": "^6.0.4",
-    "jest": "^24.9.0",
-    "ts-jest": "^24.2.0",
+    "jest": "^25.1.0",
+    "ts-jest": "^25.2.1",
     "tslint": "^5.20.1",
     "tslint-config-airbnb": "^5.11.2",
     "tsutils": "^3.17.1",
@@ -39,7 +39,7 @@
     },
     "globals": {
       "ts-jest": {
-        "tsConfigFile": "tsconfig.json"
+        "tsConfig": "tsconfig.json"
       }
     }
   },
