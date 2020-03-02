@@ -9,8 +9,8 @@ const fileData = file.toString('hex');
 const filename = `${Math.random().toString(32).substring(2)}.png`;
 const ownerPrivateKey = 'DFD40EE55EB215FF96ABCFC8D3E4E02EF77B4158306725DBF4243C91D8CBA774';
 const sha256 = new SHA256();
-const url = 'https://jp5.nemesis.land:3001';
-const networkGenerationHash = 'CC42AAD7BD45E8C276741AB2524BC30F5529AF162AD12247EF9A98D6B54A385B';
+const url = 'https://sym-test.opening-line.jp:3001';
+const networkGenerationHash = '45870419226A7E51D61D94AD728231EDC6C9B3086EF9255A8421A4F26870456A';
 const metadata = { filename: '90681.jpeg', description: 'daoka icon' };
 
 const apostilleService = CreateApostilleService.create(fileData, filename,
