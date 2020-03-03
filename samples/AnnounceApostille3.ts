@@ -40,7 +40,7 @@ listener.open().then(() => {
   merge(transactionService.announce(signedTx, listener),
         listener.status(ownerAccount.address)
   .pipe(
-    filter((error) => error.hash === signedTx.hash),
+    filter(error => error.hash === signedTx.hash),
     tap((error) => {
       console.log(error);
     }),
