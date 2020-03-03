@@ -1,11 +1,11 @@
 import { ApostilleAccount, SignType } from '../model/ApostilleAccount';
-import { NetworkType, Account, PublicAccount, InnerTransaction,
+import { NetworkType, Account, PublicAccount,
   TransactionHttp, ReceiptHttp, AggregateTransaction, Deadline,
   HashLockTransaction, NetworkCurrencyMosaic, UInt64,
   TransactionService } from 'nem2-sdk';
 import { HashFunction } from '../hash/HashFunction';
-import { GeneralApostilleService } from './GeneralApostilleService';
 import { AnnounceResult } from '../model/model';
+import { GeneralApostilleService } from './GeneralApostilleService';
 
 export class UpdateApostilleService extends GeneralApostilleService {
 
@@ -90,16 +90,6 @@ export class UpdateApostilleService extends GeneralApostilleService {
     return transaction;
   }
 
-  public innerTransactions() {
-    const innerTransactions: InnerTransaction[] = [];
-    innerTransactions.push(this.coreTransaction!);
-    if (this.announcePublicSinkTransaction) {
-      innerTransactions.push(this.announcePublicSinkTransaction);
-    }
-
-    return innerTransactions;
-  }
-
   public async isNeedApostilleAccountSign() {
     const signType = await this.apostilleAccount
       .needSignType(this.apiEndpoint, this.ownerAccount.publicKey);
@@ -108,5 +98,13 @@ export class UpdateApostilleService extends GeneralApostilleService {
       return true;
     }
     return false;
+  }
+
+  public addAssignOwnershipTransaction() {
+    throw Error('Assign ownership can not use on update');
+  }
+
+  public addMetadataTransactions() {
+    throw Error('Metadata can not use on update');
   }
 }

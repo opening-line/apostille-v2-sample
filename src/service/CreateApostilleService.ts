@@ -1,16 +1,10 @@
 import { ApostilleAccount } from '../model/ApostilleAccount';
-import { InnerTransaction, NetworkType,
-   Deadline, MultisigAccountModificationTransaction,
-    TransactionHttp } from 'nem2-sdk';
+import { NetworkType, TransactionHttp } from 'nem2-sdk';
 import { HashFunction } from '../hash/hash';
-import { MetadataTransaction } from '../model/MetadataTransaction';
 import { AnnounceResult } from '../model/AnnounceResult';
 import { GeneralApostilleService } from './GeneralApostilleService';
 
 export class CreateApostilleService extends GeneralApostilleService {
-
-  private metadataTransactions?: InnerTransaction[];
-  private assignOwnershipTransaction?: InnerTransaction;
 
   public static create(data: string,
                        filename: string,
@@ -27,7 +21,7 @@ export class CreateApostilleService extends GeneralApostilleService {
   }
 
   constructor(data: string,
-              filename,
+              filename: string,
               hashFunction: HashFunction,
               ownerPrivateKey: string,
               apiEndpoint: string,
@@ -39,26 +33,6 @@ export class CreateApostilleService extends GeneralApostilleService {
           ownerPrivateKey, apiEndpoint, networkType,
           networkGenerationHash, feeMultiplier);
     this.apostilleAccount = ApostilleAccount.create(filename, this.ownerAccount);
-  }
-
-  public addAssignOwnershipTransaction() {
-    const transaction = MultisigAccountModificationTransaction.create(
-      Deadline.create(),
-      1,
-      1,
-      [this.ownerAccount.publicAccount],
-      [],
-      this.networkType,
-    );
-    this.assignOwnershipTransaction = transaction.toAggregate(this.apostilleAccount.publicAccount);
-  }
-
-  public addMetadataTransactions(metadata: Object) {
-    const transactions = MetadataTransaction
-    .objectToMetadataTransactions(metadata,
-                                  this.apostilleAccount.publicAccount,
-                                  this.networkType);
-    this.metadataTransactions = transactions;
   }
 
   public async announce(webSocket?: any) {
@@ -81,22 +55,7 @@ export class CreateApostilleService extends GeneralApostilleService {
     });
   }
 
-  public innerTransactions() {
-    const innerTransactions: InnerTransaction[] = [];
-    innerTransactions.push(this.coreTransaction!);
-    if (this.announcePublicSinkTransaction) {
-      innerTransactions.push(this.announcePublicSinkTransaction);
-    }
-    if (this.assignOwnershipTransaction) {
-      innerTransactions.push(this.assignOwnershipTransaction);
-    }
-    if (this.metadataTransactions) {
-      Array.prototype.push.apply(innerTransactions, this.metadataTransactions);
-    }
-    return innerTransactions;
-  }
-
-  public async isNeedApostilleAccountSign() {
+  public isNeedApostilleAccountSign() {
     if (this.announcePublicSinkTransaction
       || this.assignOwnershipTransaction
       || this.metadataTransactions) {
@@ -104,5 +63,4 @@ export class CreateApostilleService extends GeneralApostilleService {
     }
     return false;
   }
-
 }
