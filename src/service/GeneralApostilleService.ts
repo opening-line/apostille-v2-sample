@@ -1,8 +1,9 @@
 import { Account, InnerTransaction, NetworkType,
-   TransferTransaction, Deadline, PlainMessage,
-    Listener, AggregateTransaction, SignedTransaction, TransactionHttp } from 'nem2-sdk';
+  Deadline, Listener, AggregateTransaction, SignedTransaction,
+  TransactionHttp, TransferTransaction, PlainMessage,
+  MultisigAccountModificationTransaction } from 'nem2-sdk';
 import { HashFunction } from '../hash/HashFunction';
-import { ApostilleAccount, Sinks, AnnounceResult } from '../model/model';
+import { ApostilleAccount, AnnounceResult, MetadataTransaction, Sinks } from '../model/model';
 import * as NodeWebSocket from 'ws';
 import { filter } from 'rxjs/operators';
 
@@ -13,6 +14,8 @@ export abstract class GeneralApostilleService {
 
   public coreTransaction?: InnerTransaction;
   public announcePublicSinkTransaction?: InnerTransaction;
+  public metadataTransactions?: InnerTransaction[];
+  public assignOwnershipTransaction?: InnerTransaction;
 
   public feeMultiplier: number;
   public txHash?: string;
@@ -54,6 +57,41 @@ export abstract class GeneralApostilleService {
     );
     this.announcePublicSinkTransaction =
       transaction.toAggregate(this.apostilleAccount.publicAccount);
+  }
+
+  public addAssignOwnershipTransaction() {
+    const transaction = MultisigAccountModificationTransaction.create(
+      Deadline.create(),
+      1,
+      1,
+      [this.ownerAccount.publicAccount],
+      [],
+      this.networkType,
+    );
+    this.assignOwnershipTransaction = transaction.toAggregate(this.apostilleAccount.publicAccount);
+  }
+
+  public addMetadataTransactions(metadata: Object) {
+    const transactions = MetadataTransaction
+    .objectToMetadataTransactions(metadata,
+                                  this.apostilleAccount.publicAccount,
+                                  this.networkType);
+    this.metadataTransactions = transactions;
+  }
+
+  public innerTransactions() {
+    const innerTransactions: InnerTransaction[] = [];
+    innerTransactions.push(this.coreTransaction!);
+    if (this.announcePublicSinkTransaction) {
+      innerTransactions.push(this.announcePublicSinkTransaction);
+    }
+    if (this.assignOwnershipTransaction) {
+      innerTransactions.push(this.assignOwnershipTransaction);
+    }
+    if (this.metadataTransactions) {
+      Array.prototype.push.apply(innerTransactions, this.metadataTransactions);
+    }
+    return innerTransactions;
   }
 
   public createCompleteTransaction() {
@@ -158,6 +196,5 @@ export abstract class GeneralApostilleService {
     return announceResult;
   }
 
-  public abstract innerTransactions();
   public abstract async isNeedApostilleAccountSign();
 }
