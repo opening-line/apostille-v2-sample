@@ -7,7 +7,9 @@
   "scripts": {
     "prepack": "rm -rf dist/ && tsc",
     "build": "rm -rf dist/ && tsc",
-    "test": "jest"
+    "test": "jest",
+    "commit": "npx git-cz",
+    "commit-all": "git add . && npx git-cz"
   },
   "author": "",
   "license": "ISC",
