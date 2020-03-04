@@ -20,6 +20,7 @@ export class UpdateApostilleService extends GeneralApostilleService {
     const service = new UpdateApostilleService(data, hashFunction, ownerPrivateKey,
                                                apostilleAccount, apiEndpoint, networkType,
                                                networkGenerationHash, feeMultiplier);
+    service.createCoreTransaction();
     return service;
   }
 

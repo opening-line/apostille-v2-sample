@@ -18,6 +18,7 @@ export class InnerTransactionService extends GeneralApostilleService {
                                                 hashFunction, ownerPrivateKey,
                                                 this.dummyGenerationHash, networkType,
                                                 this.dummyGenerationHash);
+    service.createCoreTransaction();
     return service;
   }
 

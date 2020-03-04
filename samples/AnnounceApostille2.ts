@@ -19,7 +19,6 @@ const apostilleService = CreateApostilleService.create(fileData, filename,
                                                        url, NetworkType.TEST_NET,
                                                        networkGenerationHash, 1000);
 
-apostilleService.createCoreTransaction();
 apostilleService.addAnnouncePublicSinkTransaction();
 apostilleService.addAssignOwnershipTransaction();
 apostilleService.addMetadataTransactions(metadata);

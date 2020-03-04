@@ -19,7 +19,6 @@ const repositoryFactoryHttp = new RepositoryFactoryHttp(url);
 
 const innerTxService = InnerTransactionService.create(fileData, filename, sha256,
                                                       ownerPrivateKey, networkType);
-innerTxService.createCoreTransaction();
 const innerTransactions = innerTxService.innerTransactions();
 
 const aggregateTx = AggregateTransaction.createComplete(

@@ -81,7 +81,9 @@ export abstract class GeneralApostilleService {
 
   public innerTransactions() {
     const innerTransactions: InnerTransaction[] = [];
-    innerTransactions.push(this.coreTransaction!);
+    if (this.coreTransaction) {
+      innerTransactions.push(this.coreTransaction);
+    }
     if (this.announcePublicSinkTransaction) {
       innerTransactions.push(this.announcePublicSinkTransaction);
     }
