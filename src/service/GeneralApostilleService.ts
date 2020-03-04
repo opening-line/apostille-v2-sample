@@ -1,7 +1,8 @@
 import { Account, InnerTransaction, NetworkType,
   Deadline, Listener, AggregateTransaction, SignedTransaction,
-  TransactionHttp, TransferTransaction, PlainMessage,
-  MultisigAccountModificationTransaction } from 'nem2-sdk';
+  TransferTransaction, PlainMessage,
+  MultisigAccountModificationTransaction,
+  RepositoryFactoryHttp} from 'nem2-sdk';
 import { HashFunction } from '../hash/HashFunction';
 import { ApostilleAccount, AnnounceResult, MetadataTransaction, Sinks } from '../model/model';
 import * as NodeWebSocket from 'ws';
@@ -20,6 +21,8 @@ export abstract class GeneralApostilleService {
   public feeMultiplier: number;
   public txHash?: string;
 
+  public repositoryFactory: RepositoryFactoryHttp;
+
   constructor(private data: string,
               private hashFunction: HashFunction,
               ownerPrivateKey: string,
@@ -28,6 +31,8 @@ export abstract class GeneralApostilleService {
               public networkGenerationHash: string,
               feeMultiplier?: number) {
     this.ownerAccount = Account.createFromPrivateKey(ownerPrivateKey, this.networkType);
+    this.repositoryFactory = new RepositoryFactoryHttp(apiEndpoint, networkType,
+                                                       networkGenerationHash);
     if (feeMultiplier) {
       this.feeMultiplier = feeMultiplier;
     } else {
@@ -132,7 +137,7 @@ export abstract class GeneralApostilleService {
   }
 
   public async announceComplete(webSocket?: any) {
-    const transactionHttp = new TransactionHttp(this.apiEndpoint);
+    const transactionRepository = this.repositoryFactory.createTransactionRepository();
     const listener = this.listener(webSocket);
 
     const signedTx = await this.signTransaction();
@@ -163,7 +168,7 @@ export abstract class GeneralApostilleService {
           const result = this.announceResult(signedTx);
           resolve(result);
         });
-        transactionHttp.announce(signedTx).subscribe(
+        transactionRepository.announce(signedTx).subscribe(
           (_) => {},
           (err) => {
             listener.close();

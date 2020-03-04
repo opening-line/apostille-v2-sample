@@ -1,4 +1,4 @@
-import { Account, PublicAccount, Address, MultisigHttp } from 'nem2-sdk';
+import { Account, PublicAccount, Address, RepositoryFactoryHttp } from 'nem2-sdk';
 import { createHash } from 'crypto';
 
 const fixPrivateKey = (privateKey) => {
@@ -47,8 +47,9 @@ export class ApostilleAccount {
 
   public async needSignType(networkUrl: string, cosignatoryPublicKey?: string) {
     try {
-      const multisigHttp = new MultisigHttp(networkUrl);
-      const multsigInfo = await multisigHttp.getMultisigAccountInfo(this.address).toPromise();
+      const repogitoryFactory = new RepositoryFactoryHttp(networkUrl);
+      const multisigRepository = repogitoryFactory.createMultisigRepository();
+      const multsigInfo = await multisigRepository.getMultisigAccountInfo(this.address).toPromise();
       if (multsigInfo.cosignatories.length > 0) {
         const check = multsigInfo.cosignatories.some(
           publicAccount => publicAccount.publicKey === cosignatoryPublicKey,

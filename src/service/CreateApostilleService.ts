@@ -1,5 +1,5 @@
 import { ApostilleAccount } from '../model/ApostilleAccount';
-import { NetworkType, TransactionHttp } from 'nem2-sdk';
+import { NetworkType } from 'nem2-sdk';
 import { HashFunction } from '../hash/hash';
 import { AnnounceResult } from '../model/AnnounceResult';
 import { GeneralApostilleService } from './GeneralApostilleService';
@@ -41,11 +41,11 @@ export class CreateApostilleService extends GeneralApostilleService {
   }
 
   public async announceAsync() {
-    const transactionHttp = new TransactionHttp(this.apiEndpoint);
+    const transactionRepository = this.repositoryFactory.createTransactionRepository();
     const signedTx = await this.signTransaction();
     this.txHash = signedTx.hash;
     return new Promise<AnnounceResult>((resolve, reject) => {
-      transactionHttp.announce(signedTx).subscribe(
+      transactionRepository.announce(signedTx).subscribe(
         (x) => {
           resolve(this.announceResult(signedTx));
         },
