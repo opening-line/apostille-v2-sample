@@ -20,7 +20,6 @@ const repositoryFactoryHttp = new RepositoryFactoryHttp(url);
 const innerTxService = InnerTransactionService.create(fileData, filename, sha256,
                                                       ownerPrivateKey, networkType);
 const innerTransactions = innerTxService.innerTransactions();
-
 const aggregateTx = AggregateTransaction.createComplete(
   Deadline.create(),
   innerTransactions,
@@ -45,6 +44,7 @@ listener.open().then(() => {
     }),
   )).subscribe((transaction) => {
     console.log(transaction);
+    console.log(`apostille account private key : ${innerTxService.apostilleAccount.account!.privateKey}`);
     listener.close();
   },           (err) => {
     console.error(err);
