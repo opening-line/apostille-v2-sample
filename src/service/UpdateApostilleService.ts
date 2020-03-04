@@ -1,6 +1,6 @@
 import { ApostilleAccount, SignType } from '../model/ApostilleAccount';
 import { NetworkType, Account, PublicAccount,
-  TransactionHttp, ReceiptHttp, AggregateTransaction, Deadline,
+  AggregateTransaction, Deadline,
   HashLockTransaction, NetworkCurrencyMosaic, UInt64,
   TransactionService } from 'nem2-sdk';
 import { HashFunction } from '../hash/HashFunction';
@@ -48,9 +48,9 @@ export class UpdateApostilleService extends GeneralApostilleService {
   }
 
   private announceBounded(webSocket?: any) {
-    const transactionHttp = new TransactionHttp(this.apiEndpoint);
-    const receiptHttp = new ReceiptHttp(this.apiEndpoint);
-    const transactionService = new TransactionService(transactionHttp, receiptHttp);
+    const transactionRepository = this.repositoryFactory.createTransactionRepository();
+    const receiptRepository = this.repositoryFactory.createReceiptRepository();
+    const transactionService = new TransactionService(transactionRepository, receiptRepository);
     const listener = this.listener(webSocket);
 
     const aggregateTx = this.createBoundedTransaction();
