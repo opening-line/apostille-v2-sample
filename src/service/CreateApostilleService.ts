@@ -17,6 +17,7 @@ export class CreateApostilleService extends GeneralApostilleService {
     const service = new CreateApostilleService(data, filename,
                                                hashFunction, ownerPrivateKey, apiEndpoint,
                                                networkType, networkGenerationHash, feeMultiplier);
+    service.createCoreTransaction();
     return service;
   }
 

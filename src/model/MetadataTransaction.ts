@@ -3,17 +3,10 @@ import { AccountMetadataTransaction, Deadline,
 
 export class MetadataTransaction {
 
-  private networkType: NetworkType;
   constructor(private key: string,
               private value: string,
               private apostilleAccount: PublicAccount,
-              networkType?: NetworkType) {
-    if (!networkType) {
-      this.networkType = NetworkType.MIJIN_TEST;
-    } else {
-      this.networkType = networkType;
-    }
-  }
+              private networkType: NetworkType) { }
 
   public toCreateMetadataTransaction() {
     const metadataTransaction = AccountMetadataTransaction.create(
@@ -32,7 +25,7 @@ export class MetadataTransaction {
 
   public static objectToMetadataTransactions(obj: Object,
                                              apostilleAccount: PublicAccount,
-                                             networkType?: NetworkType) {
+                                             networkType: NetworkType) {
     const metadataTransactions: InnerTransaction[] = [];
     Object.entries(obj).forEach(([key, value]) => {
       const metadataTxObj = new MetadataTransaction(key, value,

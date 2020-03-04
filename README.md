@@ -1,11 +1,18 @@
-# Apostille v2 Sample
+# Lite Apostille  Library
 
-## NOTE
+Apostille is a blockchain notarization and timestamping service.
 
-This is an experimental library.
-Recommended to use [luxtagofficial/Apostille-library](https://github.com/luxtagofficial/Apostille-library)
+This library aims to easily use apostille.
+
+This library can only use Symbol chain.
+
+## Usage
+
+NOTE: Working in progress.
+
+See [samples](https://github.com/opening-line/light-apostille-library/tree/master/samples).
 
 ## refs
 
-- [Apostille Improvement Protocol](https://github.com/nemtech/NIP/issues/11)
-- [luxtagofficial/Apostille-library](https://github.com/luxtagofficial/Apostille-library)
+- [Apostile whitepaper](https://nem.io/wp-content/themes/nem/files/ApostilleWhitePaper.pdf)
+- [Apostille Improvement Protocol](https://github.com/nemtech/NIP/blob/master/NIPs/nip-0004.md)

@@ -7,10 +7,7 @@ const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
 const fileData = file.toString('hex');
 const txHash = 'C22D8163B194E85590C400F9CFC28CE7DC48671D662954E05085B59D2FA860F3';
 
-run();
-
-async function run() {
-  const result = await AuditService.audit(fileData, txHash, url, NetworkType.TEST_NET);
+AuditService.audit(fileData, txHash, url, NetworkType.TEST_NET).then((result) => {
   console.log('--- audit result ---');
   console.log(`isSuccess: ${result.isSuccess}`);
   console.log(`txHash: ${result.txHash}`);
@@ -24,4 +21,6 @@ async function run() {
       console.log(`${key}: ${result.metadata![key]}`);
     });
   }
-}
+}).catch((err) => {
+  console.error(err);
+});
