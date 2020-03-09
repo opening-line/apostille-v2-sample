@@ -1,11 +1,11 @@
 import { AuditService } from '../src/service/AuditService';
-import { NetworkType } from 'nem2-sdk';
+import { NetworkType } from 'symbol-sdk';
 import * as fs from 'fs';
 
 const url = 'https://sym-test.opening-line.jp:3001';
 const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
 const fileData = file.toString('hex');
-const txHash = 'C22D8163B194E85590C400F9CFC28CE7DC48671D662954E05085B59D2FA860F3';
+const txHash = '92D5BF64780984CA4C25787915506AA6185498D7D77184EB1A949955E3DED516';
 
 AuditService.audit(fileData, txHash, url, NetworkType.TEST_NET).then((result) => {
   console.log('--- audit result ---');

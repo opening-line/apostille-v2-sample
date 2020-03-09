@@ -2,7 +2,7 @@ import { Account, InnerTransaction, NetworkType,
   Deadline, Listener, AggregateTransaction, SignedTransaction,
   TransferTransaction, PlainMessage,
   MultisigAccountModificationTransaction,
-  RepositoryFactoryHttp} from 'nem2-sdk';
+  RepositoryFactoryHttp} from 'symbol-sdk';
 import { HashFunction } from '../hash/HashFunction';
 import { ApostilleAccount, AnnounceResult, MetadataTransaction, Sinks } from '../model/model';
 import * as NodeWebSocket from 'ws';

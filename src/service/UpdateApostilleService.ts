@@ -2,7 +2,7 @@ import { ApostilleAccount, SignType } from '../model/ApostilleAccount';
 import { NetworkType, Account, PublicAccount,
   AggregateTransaction, Deadline,
   HashLockTransaction, NetworkCurrencyMosaic, UInt64,
-  TransactionService } from 'nem2-sdk';
+  TransactionService } from 'symbol-sdk';
 import { HashFunction } from '../hash/HashFunction';
 import { AnnounceResult } from '../model/model';
 import { GeneralApostilleService } from './GeneralApostilleService';

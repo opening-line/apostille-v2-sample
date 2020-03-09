@@ -1,4 +1,4 @@
-import { Account, NetworkType } from 'nem2-sdk';
+import { Account, NetworkType } from 'symbol-sdk';
 import { ApostilleAccount } from '../../src/model/ApostilleAccount';
 
 const seed = '.N:@N%5SVjj3Wkmr-';

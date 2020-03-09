@@ -1,6 +1,6 @@
 import { GeneralApostilleService } from './GeneralApostilleService';
 import { HashFunction } from '../hash/hash';
-import { NetworkType } from 'nem2-sdk';
+import { NetworkType } from 'symbol-sdk';
 import { ApostilleAccount } from '../model/model';
 
 export class InnerTransactionService extends GeneralApostilleService {

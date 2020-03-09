@@ -1,5 +1,5 @@
 import { SHA256, MD5, SHA1, KECCAK256, KECCAK512, SHA3_256, SHA3_512 } from '../../src/hash/hash';
-import { NetworkType } from 'nem2-sdk';
+import { NetworkType } from 'symbol-sdk';
 
 describe('Generate correct hash using MIJIN_TEST network type', () => {
   const signerPrivateKey = 'F1E7660DB9EF5E73203881304F31B7CCDF167A08055013A633D098EBD94FD36F';

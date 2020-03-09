@@ -1,4 +1,4 @@
-import { UInt64 } from 'nem2-sdk';
+import { UInt64 } from 'symbol-sdk';
 
 enum MetadataKey {
   author = 'B8A2B7186A421369',

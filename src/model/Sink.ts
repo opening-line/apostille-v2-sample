@@ -1,4 +1,4 @@
-import { NetworkType, Address } from 'nem2-sdk';
+import { NetworkType, Address } from 'symbol-sdk';
 
 export enum Sinks {
   MAIN_NET = 'NCZSJHLTIMESERVBVKOW6US64YDZG2PFGQCSV23J',

@@ -1,4 +1,4 @@
-import { PublicAccount } from 'nem2-sdk';
+import { PublicAccount } from 'symbol-sdk';
 import { ApostilleAccount } from './ApostilleAccount';
 
 export class AnnounceResult {

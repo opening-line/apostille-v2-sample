@@ -1,4 +1,4 @@
-import { NetworkType } from 'nem2-sdk';
+import { NetworkType } from 'symbol-sdk';
 import { Sinks } from '../../src/model/Sink';
 
 describe('enum sink should work', () => {

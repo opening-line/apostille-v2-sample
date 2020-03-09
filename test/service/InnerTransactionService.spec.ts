@@ -1,5 +1,5 @@
 import { InnerTransactionService } from '../../src/service/InnerTransactionService';
-import { NetworkType, TransferTransaction, Account, MultisigAccountModificationTransaction } from 'nem2-sdk';
+import { NetworkType, TransferTransaction, Account, MultisigAccountModificationTransaction } from 'symbol-sdk';
 import { SHA256 } from '../../src/hash/hash';
 import { ApostilleAccount, Sinks } from '../../src/model/model';
 

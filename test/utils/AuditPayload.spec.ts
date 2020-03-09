@@ -1,5 +1,5 @@
 import { AuditPayload } from '../../src/utils/utils';
-import { NetworkType } from 'nem2-sdk';
+import { NetworkType } from 'symbol-sdk';
 
 describe('audit apostille using MIJIN_TEST network type', () => {
   const ownerPublicKey = 'E279A49F4B4DAD6768717B2488F476467F3E6CBA0C8C7592C6E7CB517DB60AE8';

@@ -1,5 +1,5 @@
 import { AccountMetadataTransaction, Deadline,
-   PublicAccount, KeyGenerator, NetworkType, InnerTransaction } from 'nem2-sdk';
+   PublicAccount, KeyGenerator, NetworkType, InnerTransaction } from 'symbol-sdk';
 
 export class MetadataTransaction {
 

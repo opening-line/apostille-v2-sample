@@ -1,4 +1,4 @@
-import { NetworkType, Account } from 'nem2-sdk';
+import { NetworkType, Account } from 'symbol-sdk';
 
 export abstract class HashFunction {
   constructor(public readonly typeHex: string) { }

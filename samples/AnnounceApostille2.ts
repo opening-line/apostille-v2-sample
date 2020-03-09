@@ -1,6 +1,6 @@
 import { CreateApostilleService }  from '../src/service/CreateApostilleService';
 import { SHA256 } from '../src/hash/hash';
-import { NetworkType, Listener } from 'nem2-sdk';
+import { NetworkType, Listener } from 'symbol-sdk';
 import * as fs from 'fs';
 import { filter } from 'rxjs/operators';
 
@@ -10,18 +10,18 @@ const fileData = file.toString('hex');
 const filename = `${Math.random().toString(32).substring(2)}.png`;
 const ownerPrivateKey = '43E472BE7DCDD9A027F1088CB332E7F755671BE9A72571712F305B998EB3AD60';
 const sha256 = new SHA256();
-const url = 'https://sym-test.opening-line.jp:3001';
-const networkGenerationHash = '45870419226A7E51D61D94AD728231EDC6C9B3086EF9255A8421A4F26870456A';
-const metadata = { filename: '90681.jpeg', description: 'daoka icon' };
+const url = 'https://sym-test02.opening-line.jp:3001';
+const networkGenerationHash = '44D2225B8932C9A96DCB13508CBCDFFA9A9663BFBA2354FEEC8FCFCB7E19846C';
+// const metadata = { filename: '90681.jpeg', description: 'daoka icon' };
 
 const apostilleService = CreateApostilleService.create(fileData, filename,
                                                        sha256, ownerPrivateKey,
                                                        url, NetworkType.TEST_NET,
                                                        networkGenerationHash, 1000);
 
-apostilleService.addAnnouncePublicSinkTransaction();
-apostilleService.addAssignOwnershipTransaction();
-apostilleService.addMetadataTransactions(metadata);
+// apostilleService.addAnnouncePublicSinkTransaction();
+// apostilleService.addAssignOwnershipTransaction();
+// apostilleService.addMetadataTransactions(metadata);
 
 const listener = new Listener(url);
 listener.open().then(() => {
