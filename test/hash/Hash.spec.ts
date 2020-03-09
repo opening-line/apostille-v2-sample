@@ -14,14 +14,14 @@ describe('Generate correct hash using MIJIN_TEST network type', () => {
   it('generate signed hash with MD5', () => {
     const md5 = new MD5();
     // tslint:disable-next-line:max-line-length
-    const hash = 'FE2D021949C6FE3B2552B7FE197EE67A1A07A8EB66E231EC2AAD9BFED66ED66BF28B2F7E86E86FEB66785AFD9C071E5BAC9EB1B43B9155A2BB1BD5E6C85E0E0E';
+    const hash = 'E0335394DDD17FBA9BAA3C76D07159F945B1EF33E47930F5FBAA2BB882F11BB4E549E7B57B4C88B98689EDF687101BE6C7344D50E1C509DF265221DC05D57207';
     expect(md5.signedHashing(data, signerPrivateKey, NetworkType.MIJIN_TEST)).toEqual(hash);
   });
 
   it('generate apostille transaction message with MD5', () => {
     const md5 = new MD5();
     // tslint:disable-next-line:max-line-length
-    const hash = 'fe4e545981FE2D021949C6FE3B2552B7FE197EE67A1A07A8EB66E231EC2AAD9BFED66ED66BF28B2F7E86E86FEB66785AFD9C071E5BAC9EB1B43B9155A2BB1BD5E6C85E0E0E';
+    const hash = 'fe4e545981E0335394DDD17FBA9BAA3C76D07159F945B1EF33E47930F5FBAA2BB882F11BB4E549E7B57B4C88B98689EDF687101BE6C7344D50E1C509DF265221DC05D57207';
     expect(md5.apostilleTransactionMessage(data,
                                            signerPrivateKey,
                                            NetworkType.MIJIN_TEST)).toEqual(hash);
@@ -36,17 +36,17 @@ describe('Generate correct hash using MIJIN_TEST network type', () => {
   it('generate signed hash with SHA1', () => {
     const sha1 = new SHA1();
     // tslint:disable-next-line:max-line-length
-    const hash = 'F0C8290E45664E78D1825BB24CC067A4273E550303AE8D014FC6491B9719512BF9559353907D49466001DCAAC3C2C45D222315175EDDA82DFC6F5F7802573D04';
+    const hash = 'C273EA42A44F4966FED943BB9EF1C3ABFE2ABA38C7524BB6C8ACA086ECB22248E4B8AED6403D636E0B54EABBB1284235A491A69C192FE25EFF564F52C09CD600';
     expect(sha1.signedHashing(data, signerPrivateKey, NetworkType.MIJIN_TEST)).toEqual(hash);
   });
 
   it('generate apostille transaction message with SHA1', () => {
     const sha1 = new SHA1();
     // tslint:disable-next-line:max-line-length
-    const hash = 'fe4e545982F0C8290E45664E78D1825BB24CC067A4273E550303AE8D014FC6491B9719512BF9559353907D49466001DCAAC3C2C45D222315175EDDA82DFC6F5F7802573D04';
+    const hash = 'fe4e545982C273EA42A44F4966FED943BB9EF1C3ABFE2ABA38C7524BB6C8ACA086ECB22248E4B8AED6403D636E0B54EABBB1284235A491A69C192FE25EFF564F52C09CD600';
     expect(sha1.apostilleTransactionMessage(data,
-                                           signerPrivateKey,
-                                           NetworkType.MIJIN_TEST)).toEqual(hash);
+                                            signerPrivateKey,
+                                            NetworkType.MIJIN_TEST)).toEqual(hash);
   });
 
   it('generate checksum of apostille transaction message with SHA256', () => {
@@ -59,7 +59,7 @@ describe('Generate correct hash using MIJIN_TEST network type', () => {
   it('generates apostille transaction message with SHA256', () => {
     const sha256 = new SHA256();
     // tslint:disable-next-line:max-line-length
-    const hash = 'fe4e545983CEEC521C2F006B00F68C913DB59773E26F6FDFA4FDBC1FDD6A20004E89C66BDCB9DDF430AB7F5F2857BB3A9BADEC52C77584DB119281568EC1AB95ACB815F30F';
+    const hash = 'fe4e5459831CF9E29E3BFDE4CBA65C21EDEA5319A8E7CBE49F332AAF563D8C908EA1CC273DE337962081B0301F789CAFF9B6003C5BD94DF5F20B63FDF1399640514FA2CC00';
     expect(sha256.apostilleTransactionMessage(data, signerPrivateKey, NetworkType.MIJIN_TEST))
     .toEqual(hash);
   });
@@ -67,7 +67,7 @@ describe('Generate correct hash using MIJIN_TEST network type', () => {
   it('generates signed hash with SHA256', () => {
     const sha256 = new SHA256;
     // tslint:disable-next-line:max-line-length
-    const hash = 'CEEC521C2F006B00F68C913DB59773E26F6FDFA4FDBC1FDD6A20004E89C66BDCB9DDF430AB7F5F2857BB3A9BADEC52C77584DB119281568EC1AB95ACB815F30F';
+    const hash = '1CF9E29E3BFDE4CBA65C21EDEA5319A8E7CBE49F332AAF563D8C908EA1CC273DE337962081B0301F789CAFF9B6003C5BD94DF5F20B63FDF1399640514FA2CC00';
     expect(sha256.signedHashing(data, signerPrivateKey, NetworkType.MIJIN_TEST)).toEqual(hash);
   });
 
@@ -86,17 +86,17 @@ describe('Generate correct hash using MIJIN_TEST network type', () => {
   it('generate signed hash with keccak256', () => {
     const keccak256 = new KECCAK256();
     // tslint:disable-next-line:max-line-length
-    const hash = '86AB714B482A9DF4F6387DA5AE748DB78E49C27B24B3284F7E4B9BB55A8BD78A981B25EEAC70E5AE3814B75DCED68D4AFB6581BCC8F768DF09192CF88509C90D';
+    const hash = 'BAD74673DF41EF7BEC76A84DF4144C9C02EC7E3555FF8D677BA0A4FE6BC443DAB0A36840BC6D506B332B48953AB347DADA803C2080984AC54FC2B16B59B9330B';
     expect(keccak256.signedHashing(data, signerPrivateKey, NetworkType.MIJIN_TEST)).toEqual(hash);
   });
 
   it('generate apostille transaction message with keccak256', () => {
     const keccak256 = new KECCAK256();
     // tslint:disable-next-line:max-line-length
-    const hash = 'fe4e54598886AB714B482A9DF4F6387DA5AE748DB78E49C27B24B3284F7E4B9BB55A8BD78A981B25EEAC70E5AE3814B75DCED68D4AFB6581BCC8F768DF09192CF88509C90D';
+    const hash = 'fe4e545988BAD74673DF41EF7BEC76A84DF4144C9C02EC7E3555FF8D677BA0A4FE6BC443DAB0A36840BC6D506B332B48953AB347DADA803C2080984AC54FC2B16B59B9330B';
     expect(keccak256.apostilleTransactionMessage(data,
-                                           signerPrivateKey,
-                                           NetworkType.MIJIN_TEST)).toEqual(hash);
+                                                 signerPrivateKey,
+                                                 NetworkType.MIJIN_TEST)).toEqual(hash);
   });
 
   it('generate hash with keccak512', () => {
@@ -109,17 +109,17 @@ describe('Generate correct hash using MIJIN_TEST network type', () => {
   it('generate signed hash with keccak512', () => {
     const keccak512 = new KECCAK512();
     // tslint:disable-next-line:max-line-length
-    const hash = '33E11AEF0E0D940CC4B7533578D12D86A9654DC3C7241BD8FCDE3AD2552E19AAB4F257874E5D0500FA22013E9035E1ADF821A174148806FEB5853EAF5D80EC0E';
+    const hash = '754C17936BB1ED1E71EECAAC62A31D660988FE7BE9BE1006144C18F77649743F7A771E27C043E106382DB8B789947B5962486BCA9AC862A4622D2036A4AC6D0F';
     expect(keccak512.signedHashing(data, signerPrivateKey, NetworkType.MIJIN_TEST)).toEqual(hash);
   });
 
   it('generate apostille transaction message with keccak512', () => {
     const keccak512 = new KECCAK512();
     // tslint:disable-next-line:max-line-length
-    const hash = 'fe4e54598933E11AEF0E0D940CC4B7533578D12D86A9654DC3C7241BD8FCDE3AD2552E19AAB4F257874E5D0500FA22013E9035E1ADF821A174148806FEB5853EAF5D80EC0E';
+    const hash = 'fe4e545989754C17936BB1ED1E71EECAAC62A31D660988FE7BE9BE1006144C18F77649743F7A771E27C043E106382DB8B789947B5962486BCA9AC862A4622D2036A4AC6D0F';
     expect(keccak512.apostilleTransactionMessage(data,
-                                           signerPrivateKey,
-                                           NetworkType.MIJIN_TEST)).toEqual(hash);
+                                                 signerPrivateKey,
+                                                 NetworkType.MIJIN_TEST)).toEqual(hash);
   });
 
   it('generate hash with sha3_256', () => {
@@ -134,7 +134,7 @@ describe('Generate correct hash using MIJIN_TEST network type', () => {
     // tslint:disable-next-line:variable-name
     const sha3_256 = new SHA3_256();
     // tslint:disable-next-line:max-line-length
-    const hash = '4B9C121282E15B76D0F005746E364D75398B8446881762F64231C8E3731864596334CF0CFEA7208525F66E64C1B7C690D39681CF5927001FD3C68E63AAA75A0F';
+    const hash = '7CC13B10CBE2F9BFADFE6EC8CBCDDE1E996B05EA4354CD3508A7642B4D342D5807137DE096D0B16026F6795C5DA339E605A6901F356830A8E68C3C506891580D';
     expect(sha3_256.signedHashing(data, signerPrivateKey, NetworkType.MIJIN_TEST)).toEqual(hash);
   });
 
@@ -142,10 +142,10 @@ describe('Generate correct hash using MIJIN_TEST network type', () => {
     // tslint:disable-next-line:variable-name
     const sha3_256 = new SHA3_256();
     // tslint:disable-next-line:max-line-length
-    const hash = 'fe4e5459904B9C121282E15B76D0F005746E364D75398B8446881762F64231C8E3731864596334CF0CFEA7208525F66E64C1B7C690D39681CF5927001FD3C68E63AAA75A0F';
+    const hash = 'fe4e5459907CC13B10CBE2F9BFADFE6EC8CBCDDE1E996B05EA4354CD3508A7642B4D342D5807137DE096D0B16026F6795C5DA339E605A6901F356830A8E68C3C506891580D';
     expect(sha3_256.apostilleTransactionMessage(data,
-                                           signerPrivateKey,
-                                           NetworkType.MIJIN_TEST)).toEqual(hash);
+                                                signerPrivateKey,
+                                                NetworkType.MIJIN_TEST)).toEqual(hash);
   });
 
   it('generate hash with sha3_512', () => {
@@ -160,7 +160,7 @@ describe('Generate correct hash using MIJIN_TEST network type', () => {
     // tslint:disable-next-line:variable-name
     const sha3_256 = new SHA3_512();
     // tslint:disable-next-line:max-line-length
-    const hash = '67D5E936775F973F9B111A4888DFC6F62EEFFBDE872599E5878803F4E51299ACCE2875970F09060CA50E417BCA9AAB860FA6EA18A1C772673C8B71410A38FB06';
+    const hash = '4174CE7B2A84BDCE3CF666A67765DA29386FAB4C71685D1C03ED741A1271C5910E683C20C5C38508A37CD94EF76828ADBA95D6F6D99D6EB4502F9CB899F22204';
     expect(sha3_256.signedHashing(data, signerPrivateKey, NetworkType.MIJIN_TEST)).toEqual(hash);
   });
 
@@ -168,9 +168,9 @@ describe('Generate correct hash using MIJIN_TEST network type', () => {
     // tslint:disable-next-line:variable-name
     const sha3_256 = new SHA3_512();
     // tslint:disable-next-line:max-line-length
-    const hash = 'fe4e54599167D5E936775F973F9B111A4888DFC6F62EEFFBDE872599E5878803F4E51299ACCE2875970F09060CA50E417BCA9AAB860FA6EA18A1C772673C8B71410A38FB06';
+    const hash = 'fe4e5459914174CE7B2A84BDCE3CF666A67765DA29386FAB4C71685D1C03ED741A1271C5910E683C20C5C38508A37CD94EF76828ADBA95D6F6D99D6EB4502F9CB899F22204';
     expect(sha3_256.apostilleTransactionMessage(data,
-                                           signerPrivateKey,
-                                           NetworkType.MIJIN_TEST)).toEqual(hash);
+                                                signerPrivateKey,
+                                                NetworkType.MIJIN_TEST)).toEqual(hash);
   });
 });

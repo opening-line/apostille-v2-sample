@@ -10,7 +10,7 @@ describe('ApostilleAccount class should work properly with MIJIN_TEST Network Ty
 
   it('ApostilleAccount.create with MIJIN_TEST Network should return correct Account', () => {
     expect(apostilleAccount.account!.privateKey).toMatch(
-      'E26A117C038068239E312E04F2B43DCC839D31BE7471D04DCCE905C2DC164107',
+      'CBA974CC673116C25C74C1B0E4C05358596039CD04969DE8B1D60C3497B04C00',
     );
   });
 });
