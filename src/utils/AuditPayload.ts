@@ -1,4 +1,4 @@
-import { PublicAccount, NetworkType } from 'nem2-sdk';
+import { PublicAccount, NetworkType, KeyPair } from 'symbol-sdk';
 import { HashFunctionCreator } from '../hash/HashFunctionCreator';
 import { HashingType } from '../hash/hash';
 
@@ -32,7 +32,11 @@ export class AuditPayload {
       this.parsePayload();
       const hashingFunction = HashFunctionCreator.create(this.hashingType!);
       const dataHash = hashingFunction.hashing(this.data);
-      return this.ownerPublicAccount.verifySignature(dataHash, this.signedHash!);
+      const bufDataHash = new TextEncoder().encode(dataHash);
+      const bufSignedHash = Uint8Array.from(Buffer.from(this.signedHash!, 'hex'));
+      const pubKey = Uint8Array.from(Buffer.from(this.ownerPublicAccount.publicKey, 'hex'));
+      const isValid = KeyPair.verify(pubKey, bufDataHash, bufSignedHash);
+      return isValid;
     } catch (err) {
       throw err;
     }
