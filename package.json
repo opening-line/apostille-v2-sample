@@ -1,6 +1,6 @@
 {
   "name": "light-apostille-library",
-  "version": "0.11.2",
+  "version": "0.12.0",
   "description": "",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
