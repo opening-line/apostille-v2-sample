@@ -1,5 +1,5 @@
 import { MetadataKeyHelper } from '../../src/utils/MetadataKeyHelper';
-import { UInt64 } from 'nem2-sdk';
+import { UInt64 } from 'symbol-sdk';
 
 describe('metadata key mapping should work', () => {
   it('should return correct key of author', () => {

@@ -1,4 +1,4 @@
-import { PublicAccount, Address } from 'nem2-sdk';
+import { PublicAccount, Address } from 'symbol-sdk';
 
 export class AuditResult {
   constructor(public readonly isSuccess: boolean,

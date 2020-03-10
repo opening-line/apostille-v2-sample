@@ -1,8 +1,9 @@
 import { ApostilleAccount, SignType } from '../model/ApostilleAccount';
 import { NetworkType, Account, PublicAccount,
   AggregateTransaction, Deadline,
-  HashLockTransaction, NetworkCurrencyMosaic, UInt64,
-  TransactionService } from 'nem2-sdk';
+  HashLockTransaction, NetworkCurrencyPublic, UInt64,
+  TransactionService,
+  NetworkCurrencyLocal} from 'symbol-sdk';
 import { HashFunction } from '../hash/HashFunction';
 import { AnnounceResult } from '../model/model';
 import { GeneralApostilleService } from './GeneralApostilleService';
@@ -57,7 +58,7 @@ export class UpdateApostilleService extends GeneralApostilleService {
     const signedTx = this.ownerAccount.sign(aggregateTx, this.networkGenerationHash);
     const hashLockTx = HashLockTransaction.create(
       Deadline.create(),
-      NetworkCurrencyMosaic.createRelative(10),
+      this.lockedCurrency(),
       UInt64.fromUint(480),
       signedTx,
       this.networkType,
@@ -107,5 +108,13 @@ export class UpdateApostilleService extends GeneralApostilleService {
 
   public addMetadataTransactions() {
     throw Error('Metadata can not use on update');
+  }
+
+  private lockedCurrency() {
+    if (this.networkType === NetworkType.MAIN_NET || this.networkType === NetworkType.TEST_NET) {
+      return NetworkCurrencyPublic.createRelative(10);
+    }
+    return NetworkCurrencyLocal.createRelative(10);
+
   }
 }

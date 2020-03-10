@@ -1,5 +1,5 @@
 import { ApostilleAccount } from '../model/ApostilleAccount';
-import { NetworkType } from 'nem2-sdk';
+import { NetworkType } from 'symbol-sdk';
 import { HashFunction } from '../hash/hash';
 import { AnnounceResult } from '../model/AnnounceResult';
 import { GeneralApostilleService } from './GeneralApostilleService';

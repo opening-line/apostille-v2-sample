@@ -1,4 +1,4 @@
-import { Account, PublicAccount, Address, RepositoryFactoryHttp } from 'nem2-sdk';
+import { Account, PublicAccount, Address, RepositoryFactoryHttp } from 'symbol-sdk';
 import { createHash } from 'crypto';
 
 const fixPrivateKey = (privateKey) => {

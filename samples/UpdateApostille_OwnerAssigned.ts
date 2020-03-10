@@ -1,16 +1,16 @@
 import { UpdateApostilleService }  from '../src/service/service';
 import { SHA256 } from '../src/hash/hash';
-import { NetworkType, PublicAccount } from 'nem2-sdk';
+import { NetworkType, PublicAccount } from 'symbol-sdk';
 import * as fs from 'fs';
 
 console.log(__dirname);
 const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
 const fileData = file.toString('hex');
-const ownerPrivateKey = 'DFD40EE55EB215FF96ABCFC8D3E4E02EF77B4158306725DBF4243C91D8CBA774';
+const ownerPrivateKey = '43E472BE7DCDD9A027F1088CB332E7F755671BE9A72571712F305B998EB3AD60';
 const sha256 = new SHA256();
 const url = 'https://sym-test.opening-line.jp:3001';
-const networkGenerationHash = '45870419226A7E51D61D94AD728231EDC6C9B3086EF9255A8421A4F26870456A';
-const apostilleAccountPubKey = '0F91C2379DA33DA28EDEEED890E1AB557FEEFDFFA44E57A76FA98AC72CD9F4C6';
+const networkGenerationHash = '44D2225B8932C9A96DCB13508CBCDFFA9A9663BFBA2354FEEC8FCFCB7E19846C';
+const apostilleAccountPubKey = 'CC2A913CF6B01D4E645F468EA1BC3FA649964B6609AFB5916901D8BD0EC0B7CA';
 const apostilleAccount = PublicAccount.createFromPublicKey(apostilleAccountPubKey,
                                                            NetworkType.TEST_NET);
 

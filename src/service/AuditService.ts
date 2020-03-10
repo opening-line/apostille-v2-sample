@@ -1,5 +1,5 @@
 import { PublicAccount, NetworkType, TransactionHttp, Transaction,
-   AggregateTransaction, TransferTransaction, Address, BlockHttp, MetadataHttp } from 'nem2-sdk';
+   AggregateTransaction, TransferTransaction, Address, BlockHttp, MetadataHttp } from 'symbol-sdk';
 import { AuditPayload, MetadataKeyHelper } from '../utils/utils';
 import { AuditResult } from '../model/AuditResult';
 import { Sinks } from '../model/Sink';
