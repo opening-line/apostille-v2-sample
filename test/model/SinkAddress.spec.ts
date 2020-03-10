@@ -22,6 +22,7 @@ describe('enum sink should work', () => {
 
   it('should return correct sink address of MIJIN_TEST', () => {
     const exceptAddress = 'SA3MA2-B3N2G6-CONOSP-SV2KMK-NWN6AU-Q2OA6E-2WYJ';
-    const sinkAddress = Sinks.getAddress(NetworkType.MIJIN_TEST);    expect(sinkAddress.pretty()).toMatch(exceptAddress);
+    const sinkAddress = Sinks.getAddress(NetworkType.MIJIN_TEST);
+    expect(sinkAddress.pretty()).toMatch(exceptAddress);
   });
 });

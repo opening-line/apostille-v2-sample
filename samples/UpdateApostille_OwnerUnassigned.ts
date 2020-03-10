@@ -6,11 +6,11 @@ import * as fs from 'fs';
 console.log(__dirname);
 const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
 const fileData = file.toString('hex');
-const ownerPrivateKey = 'DFD40EE55EB215FF96ABCFC8D3E4E02EF77B4158306725DBF4243C91D8CBA774';
+const ownerPrivateKey = '43E472BE7DCDD9A027F1088CB332E7F755671BE9A72571712F305B998EB3AD60';
 const sha256 = new SHA256();
 const url = 'https://sym-test.opening-line.jp:3001';
 const networkGenerationHash = '44D2225B8932C9A96DCB13508CBCDFFA9A9663BFBA2354FEEC8FCFCB7E19846C';
-const apostilleAccountPrivateKey = '776BE16FA2CFE59B9B7D5DAEBAD406F54414ABA551F2AD44A373BE70AA8E7D0C';
+const apostilleAccountPrivateKey = 'DED7F55F37C39E49FC47DBABBE77536D1F9CD34DA422161EEB64BC5A927A3C8E';
 const apostilleAccount = Account.createFromPrivateKey(apostilleAccountPrivateKey,
                                                       NetworkType.TEST_NET);
 
