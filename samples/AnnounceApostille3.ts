@@ -25,7 +25,7 @@ const aggregateTx = AggregateTransaction.createComplete(
   innerTransactions,
   networkType,
   [],
-).setMaxFee(150);
+).setMaxFeeForAggregate(100, 2);
 
 const signedTx = ownerAccount.sign(aggregateTx, networkGenerationHash);
 

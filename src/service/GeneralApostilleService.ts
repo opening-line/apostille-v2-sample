@@ -1,8 +1,9 @@
-import { Account, InnerTransaction, NetworkType,
+import { Account, InnerTransaction,
   Deadline, Listener, AggregateTransaction, SignedTransaction,
   TransferTransaction, PlainMessage,
   MultisigAccountModificationTransaction,
-  RepositoryFactoryHttp} from 'symbol-sdk';
+  RepositoryFactoryHttp,
+  NetworkType} from 'symbol-sdk';
 import { HashFunction } from '../hash/HashFunction';
 import { ApostilleAccount, AnnounceResult, MetadataTransaction, Sinks } from '../model/model';
 import * as NodeWebSocket from 'ws';
@@ -107,7 +108,7 @@ export abstract class GeneralApostilleService {
       this.innerTransactions(),
       this.networkType,
       [],
-    ).setMaxFee(this.feeMultiplier) as AggregateTransaction;
+    ).setMaxFeeForAggregate(this.feeMultiplier, 2);
 
     return transaction;
   }
