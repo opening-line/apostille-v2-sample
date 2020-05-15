@@ -10,11 +10,11 @@ const networkType = NetworkType.TEST_NET;
 const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
 const fileData = file.toString('hex');
 const filename = `${Math.random().toString(32).substring(2)}.png`;
-const ownerPrivateKey = '43E472BE7DCDD9A027F1088CB332E7F755671BE9A72571712F305B998EB3AD60';
+const ownerPrivateKey = '42955088A7D670F512A020AEEC6C42DDE2B2CE3969C154DD4CD8EA573A2BEA56';
 const ownerAccount = Account.createFromPrivateKey(ownerPrivateKey, networkType);
 const sha256 = new SHA256();
 const url = 'https://sym-test.opening-line.jp:3001';
-const networkGenerationHash = '44D2225B8932C9A96DCB13508CBCDFFA9A9663BFBA2354FEEC8FCFCB7E19846C';
+const networkGenerationHash = 'ACECD90E7B248E012803228ADB4424F0D966D24149B72E58987D2BF2F2AF03C4';
 const repositoryFactoryHttp = new RepositoryFactoryHttp(url);
 
 const innerTxService = InnerTransactionService.create(fileData, filename, sha256,
@@ -25,7 +25,7 @@ const aggregateTx = AggregateTransaction.createComplete(
   innerTransactions,
   networkType,
   [],
-).setMaxFee(150);
+).setMaxFeeForAggregate(100, 2);
 
 const signedTx = ownerAccount.sign(aggregateTx, networkGenerationHash);
 

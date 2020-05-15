@@ -5,7 +5,7 @@ import * as fs from 'fs';
 const url = 'https://sym-test.opening-line.jp:3001';
 const file = fs.readFileSync(`${__dirname}/file/90681.jpeg`);
 const fileData = file.toString('hex');
-const txHash = '65197B0ABDD1BBCF9F7A72335E56DD9043C024CEC1DC48211A0500DB38D86ABA';
+const txHash = '2A92C5E80F0A5454C8357E9201733D22C7FC8CE8F6A8B3363AF5D0854528E04E';
 
 AuditService.audit(fileData, txHash, url, NetworkType.TEST_NET).then((result) => {
   console.log('--- audit result ---');
