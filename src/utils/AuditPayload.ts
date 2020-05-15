@@ -1,7 +1,6 @@
-import { PublicAccount, NetworkType, KeyPair } from 'symbol-sdk';
+import { PublicAccount, NetworkType } from 'symbol-sdk';
 import { HashFunctionCreator } from '../hash/HashFunctionCreator';
 import { HashingType } from '../hash/hash';
-import { TextEncoder } from 'text-encoding';
 
 const apostillePattern = /fe4e5459(81|82|83|88|89|90|91)(\w+)/;
 
@@ -33,11 +32,7 @@ export class AuditPayload {
       this.parsePayload();
       const hashingFunction = HashFunctionCreator.create(this.hashingType!);
       const hashedData = hashingFunction.hashing(this.data);
-      const textEncoder = new TextEncoder();
-      const bufDataHash = textEncoder.encode(hashedData);
-      const bufSignedHash = Uint8Array.from(Buffer.from(this.signedHash!, 'hex'));
-      const pubKey = Uint8Array.from(Buffer.from(this.ownerPublicAccount.publicKey, 'hex'));
-      const isValid = KeyPair.verify(pubKey, bufDataHash, bufSignedHash);
+      const isValid = this.ownerPublicAccount.verifySignature(hashedData, this.signedHash!);
       return isValid;
     } catch (err) {
       console.error(err);
